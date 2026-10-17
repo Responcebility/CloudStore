@@ -27,14 +27,22 @@ style follows the group's [JGA-Project](https://github.com/260780395/JGA-Project
 | Home | Name and slogan, hero photo, bestsellers, Crunch Pass teaser, how it works, elevator pitch (Problem → Solution → Who it's for → How AI helps) |
 | Menu (Products & Services) | 28 items with photos in 8 categories (burgers, combos, chicken, sides, pies, rolls, ice cream, drinks), search and category filter |
 | Crunch Pass | Distance slider with a live price (R49 + R15 per km), a "Is it worth it?" comparison, buy, change or cancel |
-| Basket | Quantities, delivery or collection, distance in km, exact delivery fee (minus what your pass covers) before you pay |
+| Basket | Quantities, delivery or collection, distance in km, exact delivery fee (minus what your pass covers) before you pay. You must be signed in to add food |
 | My account | Crunch Pass status and order history with live status |
 | Our story (About) | Problem statement, aim and objectives, community impact, how it was built |
 | Customer persona | Thandi the student, her journey, and why a 4 km pass saves her R403 a month |
 | Revenue model | Income streams, formulas, pass price table, sales-by-category chart, interactive **first-year cash-flow, profit/loss and cost-benefit projection** |
 | Research | Five case studies (Chicken Licken, Nando's, Galito's, Mr D, Uber Eats), the gap Kasi-Crunch fills, Chicago author-date references |
 | Contact | Validated contact form (saved to MySQL) and quick answers |
-| Dashboard (admin) | Revenue, gross profit and margin, delivery fees, pass income, mean / median / range of order value and delivery distance, per-day → per-month conversions, 4 charts, top items, margin by category, order status updates, messages, add menu items |
+| Dashboard (admin) | Revenue, gross profit and margin, delivery fees, pass income, mean / median / range of order value and delivery distance, per-day → per-month conversions, 4 charts, top items, margin by category, order status updates, messages, add menu items **with a real uploaded photo**, and change the photo of any item |
+
+**Accounts:** customers sign in to order (adding to the basket asks visitors to
+sign in first), and can sign out from the header or the phone menu. Signing out
+empties the basket on that device.
+
+**Photo uploads:** the admin can upload JPG, PNG or WebP photos from the
+dashboard. The browser shrinks them before uploading; the server checks the
+real file type and size (2 MB) and saves them in `public/uploads/` (ignored by Git).
 
 **Crunchy**, a rule-based ordering assistant on every page, explains delivery
 and the Crunch Pass, suggests spicy or budget food, searches the menu and
@@ -86,8 +94,9 @@ polite messages such as "Please enter a delivery distance between 0.1 and 30 km.
 ./test.sh        # or .\test.ps1 on Windows
 ```
 
-47 checks on the delivery and pass formulas, statistics, validation (including
-bad input such as letters, negatives, 0 km and 31 km) and password hashing.
+52 checks on the delivery and pass formulas, statistics, validation (including
+bad input such as letters, negatives, 0 km and 31 km), photo-type detection and
+password hashing.
 No database is needed.
 
 ---
@@ -139,7 +148,8 @@ CloudStore/                (repository name; the app is Kasi-Crunch)
 |---|---|---|
 | `POST /api/auth/register`, `/login`, `/logout`, `GET /api/auth/me` | anyone | Accounts and sessions |
 | `GET /api/products?search=&category=&popular=1`, `GET /api/products/categories` | anyone | Menu |
-| `POST /api/products` | admin | Add a menu item |
+| `POST /api/products` | admin | Add a menu item (with an uploaded photo or an existing one) |
+| `POST /api/products/photo` | admin | Upload a new photo for a menu item |
 | `POST /api/orders`, `GET /api/orders/mine` | signed in | Checkout (delivery or collection) and order history |
 | `GET /api/pass/quote?maxKm=`, `POST /api/pass`, `POST /api/pass/cancel` | signed in (quote: anyone) | Crunch Pass |
 | `POST /api/contact` | anyone | Contact form |

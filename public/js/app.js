@@ -94,7 +94,19 @@ const KC = (() => {
   const basketItems = () => Object.values(readBasket());
   const limitFor = (item) => Math.min(pricing.maxQuantityPerItem, item.stock ?? pricing.maxQuantityPerItem);
 
+  /** Sends a visitor to sign in, then brings them back to this page. */
+  function requireSignIn(message) {
+    toast(message, "error");
+    const here = location.pathname.split("/").pop() || "index.html";
+    setTimeout(() => (location.href = "login.html?next=" + encodeURIComponent(here)), 900);
+  }
+
   function addToBasket(product) {
+    // Ordering needs an account, so the basket is only for signed-in customers.
+    if (!currentUser) {
+      requireSignIn("Please sign in or create an account to start your order.");
+      return;
+    }
     const basket = readBasket();
     const next = (basket[product.id]?.qty || 0) + 1;
     if (next > limitFor(product)) {
@@ -174,15 +186,29 @@ const KC = (() => {
 
   function renderAuth() {
     const slot = document.querySelector(".auth-slot");
-    if (!currentUser) return;
-    const label = currentUser.role === "admin" ? "Dashboard" : currentUser.fullName.split(" ")[0];
-    slot.innerHTML = `<a class="button button-outline button-small account-link" href="${currentUser.role === "admin" ? "dashboard.html" : "account.html"}">${escapeHtml(label)}</a>`;
+    const nav = document.querySelector(".main-nav");
+    if (!currentUser) {
+      nav.insertAdjacentHTML("beforeend", `<a class="nav-only-mobile" href="login.html">Sign in</a>`);
+      return;
+    }
+    const admin = currentUser.role === "admin";
+    const href = admin ? "dashboard.html" : "account.html";
+    const label = admin ? "Dashboard" : "Hi, " + currentUser.fullName.split(" ")[0];
+    slot.innerHTML = `<a class="button button-outline button-small account-link" href="${href}">${escapeHtml(label)}</a>
+      <button class="button button-ghost button-small account-link" type="button" data-logout>Sign out</button>`;
+    nav.insertAdjacentHTML("beforeend", `<a class="nav-only-mobile" href="${href}">${admin ? "Dashboard" : "My account"}</a>
+      <a class="nav-only-mobile" href="#" data-logout>Sign out</a>`);
+    document.querySelectorAll("[data-logout]").forEach((el) => el.addEventListener("click", (event) => {
+      event.preventDefault();
+      logout();
+    }));
   }
 
   async function logout() {
     await api("/api/auth/logout", { method: "POST", data: {} }).catch(() => {});
+    clearBasket();
     toast("You've been signed out. See you soon!");
-    setTimeout(() => (window.location.href = "index.html"), 500);
+    setTimeout(() => (window.location.href = "index.html"), 600);
   }
 
   // ---------- Menu card ----------
@@ -311,7 +337,7 @@ const KC = (() => {
   })();
 
   return {
-    api, money, escapeHtml, toast, ready, itemCard, bindAddButtons, logout, round2,
+    api, money, escapeHtml, toast, ready, itemCard, bindAddButtons, logout, round2, requireSignIn,
     basketItems, addToBasket, setQuantity, clearBasket, subtotal, deliveryFee, passPrice,
     get user() { return currentUser; },
     get pricing() { return pricing; },

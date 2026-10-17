@@ -80,7 +80,7 @@ public final class Database {
           price DECIMAL(10,2) NOT NULL,
           cost DECIMAL(10,2) NOT NULL,
           stock INT NOT NULL,
-          image VARCHAR(80) NOT NULL,
+          image VARCHAR(120) NOT NULL,
           popular TINYINT(1) NOT NULL DEFAULT 0,
           spicy TINYINT(1) NOT NULL DEFAULT 0,
           created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP

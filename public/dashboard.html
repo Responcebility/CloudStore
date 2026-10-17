@@ -55,15 +55,32 @@
         <thead><tr><th>Order</th><th>Customer</th><th>Time</th><th>Type</th><th class="num">Total</th><th>Status</th></tr></thead>
         <tbody id="orders"></tbody></table></div></div>
 
+      <div class="card">
+        <div class="row between"><h3 style="margin:0">Menu photos</h3><span class="muted small">Click "Change photo" to upload a real picture for any item.</span></div>
+        <div class="photo-list" id="photo-list"></div>
+        <input type="file" id="replace-photo" accept="image/jpeg,image/png,image/webp" hidden>
+      </div>
+
       <div class="grid split">
         <div class="card"><h3>Messages</h3><div id="messages" class="stack"></div></div>
         <form class="card form-grid" id="item-form" novalidate>
           <h3 style="margin:0">Add a menu item</h3>
           <div class="field"><label for="i-name">Name</label><input class="input" id="i-name" name="name" maxlength="100"><span class="field-error"></span></div>
           <div class="field"><label for="i-description">Description</label><input class="input" id="i-description" name="description" maxlength="300"><span class="field-error"></span></div>
+          <div class="field">
+            <label for="i-photo">Photo</label>
+            <div class="photo-picker">
+              <img id="i-preview" class="photo-preview" alt="" hidden>
+              <div class="stack" style="flex:1">
+                <input class="input" id="i-photo" type="file" accept="image/jpeg,image/png,image/webp">
+                <small>Upload a real photo (JPG, PNG or WebP, under 2 MB), or pick one we already have:</small>
+                <select class="input" id="i-image" name="image"></select>
+              </div>
+            </div>
+            <span class="field-error"></span>
+          </div>
           <div class="form-row">
             <div class="field"><label for="i-category">Category</label><select class="input" id="i-category" name="category"></select></div>
-            <div class="field"><label for="i-image">Photo</label><select class="input" id="i-image" name="image"></select></div>
             <div class="field"><label for="i-price">Price (R)</label><input class="input" id="i-price" name="price" type="number" step="0.01"><span class="field-error"></span></div>
             <div class="field"><label for="i-cost">Food cost (R)</label><input class="input" id="i-cost" name="cost" type="number" step="0.01"><span class="field-error"></span></div>
             <div class="field"><label for="i-stock">Daily stock</label><input class="input" id="i-stock" name="stock" type="number" step="1"><span class="field-error"></span></div>

@@ -12,3 +12,6 @@ lib/*.jar
 *.iml
 .DS_Store
 Thumbs.db
+
+# Photos uploaded through the admin dashboard
+public/uploads/

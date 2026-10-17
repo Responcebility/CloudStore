@@ -72,6 +72,13 @@ public final class CoreTest {
         rejects("rejects merged quantity over 20", () -> OrderHandler.parseItems("4:15,4:6"));
         rejects("rejects garbage", () -> OrderHandler.parseItems("hello"));
 
+        // Uploaded photos are recognised by their first bytes, not their name.
+        check("recognises a JPEG", "jpg".equals(Uploads.detectExtension(new byte[]{(byte) 0xFF, (byte) 0xD8, (byte) 0xFF, 0x00})));
+        check("recognises a PNG", "png".equals(Uploads.detectExtension(new byte[]{(byte) 0x89, 'P', 'N', 'G', 0x0D, 0x0A, 0x1A, 0x0A, 0x00})));
+        check("recognises a WebP", "webp".equals(Uploads.detectExtension("RIFF0000WEBPVP8 ".getBytes())));
+        check("rejects text pretending to be an image", Uploads.detectExtension("not really an image".getBytes()) == null);
+        check("rejects a GIF", Uploads.detectExtension("GIF89a........".getBytes()) == null);
+
         // JSON output escapes dangerous characters.
         check("json escapes quotes and tags", Json.write(Json.map("x", "a\"<b>")).equals("{\"x\":\"a\\\"\\u003cb\\u003e\"}"));
 

@@ -98,10 +98,91 @@
       : `<p class="muted">No messages yet.</p>`;
   }
 
+  // ---------- Photos ----------
+  /**
+   * Reads an image file the admin picked and shrinks it in the browser
+   * (longest side 1200 px, JPEG) so uploads stay small and fast.
+   */
+  function readPhoto(file) {
+    return new Promise((resolve, reject) => {
+      if (!file) return reject(new Error("Please choose a photo."));
+      if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return reject(new Error("Only JPG, PNG or WebP photos can be uploaded."));
+      if (file.size > 10 * 1024 * 1024) return reject(new Error("That photo is too large. Please choose one under 10 MB."));
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error("That photo could not be read. Please try another image."));
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = () => reject(new Error("That file is not a valid image."));
+        img.onload = () => {
+          const scale = Math.min(1, 1200 / Math.max(img.width, img.height));
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+          const ctx = canvas.getContext("2d");
+          ctx.fillStyle = "#fff";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL("image/jpeg", 0.85));
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  let menuItems = [];
+  async function loadPhotoList() {
+    ({ products: menuItems } = await KC.api("/api/products"));
+    document.getElementById("photo-list").innerHTML = menuItems.map((p) => `
+      <div class="photo-item">
+        <img src="${KC.escapeHtml(p.image)}" alt="${KC.escapeHtml(p.name)}">
+        <div><strong>${KC.escapeHtml(p.name)}</strong><span class="muted small">${KC.escapeHtml(p.category)} · ${KC.money(p.price)}</span></div>
+        <button class="button button-outline button-small" type="button" data-photo="${p.id}">Change photo</button>
+      </div>`).join("");
+  }
+
+  const replaceInput = document.getElementById("replace-photo");
+  let replacingId = null;
+  document.getElementById("photo-list").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-photo]");
+    if (!button) return;
+    replacingId = button.dataset.photo;
+    replaceInput.value = "";
+    replaceInput.click();
+  });
+  replaceInput.addEventListener("change", async () => {
+    if (!replaceInput.files[0] || !replacingId) return;
+    try {
+      const imageData = await readPhoto(replaceInput.files[0]);
+      const result = await KC.api("/api/products/photo", { method: "POST", data: { id: replacingId, imageData } });
+      KC.toast(result.message);
+      loadPhotoList();
+    } catch (error) {
+      KC.toast(error.message, "error");
+    }
+  });
+
   // ---------- Add a menu item ----------
   const form = document.getElementById("item-form");
   const { categories } = await KC.api("/api/products/categories");
   const { products } = await KC.api("/api/products");
+  const photoInput = document.getElementById("i-photo");
+  const preview = document.getElementById("i-preview");
+  let uploadedPhoto = null;
+  photoInput.addEventListener("change", async () => {
+    uploadedPhoto = null;
+    preview.hidden = true;
+    if (!photoInput.files[0]) return;
+    try {
+      uploadedPhoto = await readPhoto(photoInput.files[0]);
+      preview.src = uploadedPhoto;
+      preview.hidden = false;
+      showFieldError(photoInput, "");
+    } catch (error) {
+      photoInput.value = "";
+      showFieldError(photoInput, error.message);
+    }
+  });
   form.querySelector("[name=category]").innerHTML = categories.map((c) => `<option>${KC.escapeHtml(c)}</option>`).join("");
   // One option per photo, named after the first menu item that uses it.
   const photos = new Map();
@@ -124,17 +205,22 @@
     ok = showFieldError(get("stock"), get("stock").value !== "" && Number.isInteger(stock) && stock >= 0 && stock <= 10000 ? "" : "Please enter a whole number between 0 and 10000.") && ok;
     if (!ok) return;
     try {
-      const result = await KC.api("/api/products", { method: "POST", data: Object.fromEntries(new FormData(form)) });
+      const data = Object.fromEntries(new FormData(form));
+      if (uploadedPhoto) data.imageData = uploadedPhoto;
+      const result = await KC.api("/api/products", { method: "POST", data });
       KC.toast(result.message);
       form.reset();
+      uploadedPhoto = null;
+      preview.hidden = true;
       loadStats();
+      loadPhotoList();
     } catch (error) {
       KC.toast(error.message, "error");
     }
   });
 
   try {
-    await Promise.all([loadStats(), loadOrders(), loadMessages()]);
+    await Promise.all([loadStats(), loadOrders(), loadMessages(), loadPhotoList()]);
   } catch (error) {
     KC.toast(error.message, "error");
   }

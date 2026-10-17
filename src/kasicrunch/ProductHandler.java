@@ -45,6 +45,7 @@ public final class ProductHandler extends ApiHandler {
         switch (method + " " + path) {
             case "GET /api/products" -> list(exchange);
             case "POST /api/products" -> create(exchange);
+            case "POST /api/products/photo" -> changePhoto(exchange);
             case "GET /api/products/categories" -> Http.json(exchange, 200, Json.map("categories", List.of(CATEGORIES)));
             default -> throw noRoute();
         }
@@ -93,7 +94,7 @@ public final class ProductHandler extends ApiHandler {
                         "category", row.getString(4),
                         "price", row.getDouble(5),
                         "stock", row.getInt(6),
-                        "image", "img/menu/" + row.getString(7) + ".jpg",
+                        "image", imagePath(row.getString(7)),
                         "popular", row.getBoolean(8),
                         "spicy", row.getBoolean(9)));
             }
@@ -116,9 +117,38 @@ public final class ProductHandler extends ApiHandler {
         }
     }
 
+    /** Built-in photos are stored by id; uploaded ones by their path under public/. */
+    static String imagePath(String stored) {
+        return stored.contains("/") ? stored : "img/menu/" + stored + ".jpg";
+    }
+
+    /** The admin replaces an item's photo with an uploaded one. */
+    private void changePhoto(HttpExchange exchange) throws Exception {
+        Auth.requireAdmin(exchange);
+        Map<String, String> form = Http.body(exchange, Uploads.MAX_REQUEST_BYTES);
+        int productId = Validator.intInRange(form.get("id"), "menu item", 1, Integer.MAX_VALUE);
+        try (Connection connection = Database.connect()) {
+            String name;
+            try (PreparedStatement query = connection.prepareStatement("SELECT name FROM products WHERE id = ?")) {
+                query.setInt(1, productId);
+                try (ResultSet row = query.executeQuery()) {
+                    if (!row.next()) throw ApiException.notFound("That menu item does not exist.");
+                    name = row.getString(1);
+                }
+            }
+            String image = Uploads.savePhoto(form.get("imageData"));
+            try (PreparedStatement update = connection.prepareStatement("UPDATE products SET image = ? WHERE id = ?")) {
+                update.setString(1, image);
+                update.setInt(2, productId);
+                update.executeUpdate();
+            }
+            Http.json(exchange, 200, Json.map("image", imagePath(image), "message", "The photo for " + name + " was updated."));
+        }
+    }
+
     private void create(HttpExchange exchange) throws Exception {
         Auth.requireAdmin(exchange);
-        Map<String, String> form = Http.body(exchange);
+        Map<String, String> form = Http.body(exchange, Uploads.MAX_REQUEST_BYTES);
         String name = Validator.text(form, "name", "item name", 2, 100);
         String description = Validator.text(form, "description", "description", 5, 300);
         String category = Validator.oneOf(form, "category", "category", CATEGORIES);
@@ -128,7 +158,10 @@ public final class ProductHandler extends ApiHandler {
             throw ApiException.badRequest("The food cost must be lower than the selling price, otherwise every sale makes a loss.");
         }
         int stock = Validator.intInRange(form.get("stock"), "daily stock", 0, 10_000);
-        String image = Validator.oneOf(form, "image", "photo", IMAGES);
+        // Either a freshly uploaded photo, or one of the photos already on the menu.
+        String image = form.containsKey("imageData") && !form.get("imageData").isBlank()
+                ? Uploads.savePhoto(form.get("imageData"))
+                : Validator.oneOf(form, "image", "photo", IMAGES);
         boolean spicy = "1".equals(form.get("spicy"));
 
         String sql = "INSERT INTO products (name, description, category, price, cost, stock, image, spicy) VALUES (?,?,?,?,?,?,?,?)";

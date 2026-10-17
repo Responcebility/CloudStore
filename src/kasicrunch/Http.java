@@ -48,14 +48,19 @@ public final class Http {
 
     /** Reads an application/x-www-form-urlencoded request body. */
     public static Map<String, String> body(HttpExchange exchange) throws IOException {
+        return body(exchange, MAX_BODY_BYTES);
+    }
+
+    /** Same, with a larger limit for requests that carry a photo. */
+    public static Map<String, String> body(HttpExchange exchange, int maxBytes) throws IOException {
         try (InputStream in = exchange.getRequestBody()) {
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            byte[] chunk = new byte[4096];
+            byte[] chunk = new byte[8192];
             int read;
             while ((read = in.read(chunk)) != -1) {
                 buffer.write(chunk, 0, read);
-                if (buffer.size() > MAX_BODY_BYTES) {
-                    throw new ApiException(413, "That request is too large.");
+                if (buffer.size() > maxBytes) {
+                    throw new ApiException(413, "That photo is too large. Please choose an image under 2 MB.");
                 }
             }
             return parseForm(buffer.toString(StandardCharsets.UTF_8));

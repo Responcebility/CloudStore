@@ -37,8 +37,11 @@
             <button class="button button-outline button-small" type="button" data-remove="${item.id}" style="margin-top:8px">Remove</button>
           </div>
         </div>`).join("")
-      : `<div class="empty"><div class="big">✳</div><h3>It's a little empty in here.</h3><p>Let's fix that with something delicious.</p>
-          <a class="button button-primary" href="menu.html">Explore the menu ↗</a></div>`;
+      : KC.user
+        ? `<div class="empty"><div class="big">✳</div><h3>It's a little empty in here.</h3><p>Let's fix that with something delicious.</p>
+            <a class="button button-primary" href="menu.html">Explore the menu ↗</a></div>`
+        : `<div class="empty"><div class="big">✳</div><h3>Sign in to start your order.</h3><p>You need an account to add food to your basket.</p>
+            <a class="button button-primary" href="login.html?next=cart.html">Sign in or create an account ↗</a></div>`;
   }
 
   function renderTotals() {
@@ -139,7 +142,8 @@
 
   render();
   KC.ready.then(() => {
-    document.getElementById("login-note").hidden = Boolean(KC.user);
-    renderTotals();
+    // Visitors only see the "sign in to start your order" card.
+    form.hidden = !KC.user;
+    render();
   });
 })();
