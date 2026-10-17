@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Log in · CloudStore</title>
+  <meta name="description" content="Log in or create a CloudStore account.">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="login">
+  <main id="main" class="container" style="max-width:480px">
+    <section class="card glass reveal" style="margin-top:20px">
+      <div style="text-align:center">
+        <div class="brand-mark" style="width:56px;height:56px;font-size:1.6rem;margin:0 auto 14px;border-radius:18px">☁</div>
+        <h1 style="font-size:1.8rem">Welcome to CloudStore</h1>
+        <p class="muted">Log in to check out, track orders and manage your plan.</p>
+      </div>
+      <div class="tabs glass" role="tablist" style="display:flex;width:100%">
+        <button class="tab active" type="button" role="tab" aria-selected="true" data-tab="login" style="flex:1">Log in</button>
+        <button class="tab" type="button" role="tab" aria-selected="false" data-tab="register" style="flex:1">Create account</button>
+      </div>
+
+      <form class="form-grid" id="login-form" novalidate>
+        <div class="field"><label for="login-email">Email</label><input class="input" id="login-email" name="email" type="email" autocomplete="email" maxlength="120"><span class="field-error"></span></div>
+        <div class="field"><label for="login-password">Password</label><input class="input" id="login-password" name="password" type="password" autocomplete="current-password" maxlength="72"><span class="field-error"></span></div>
+        <div class="result" role="status"></div>
+        <button class="btn btn-primary btn-lg btn-block" type="submit">Log in</button>
+      </form>
+
+      <form class="form-grid" id="register-form" novalidate hidden>
+        <div class="field"><label for="reg-name">Full name</label><input class="input" id="reg-name" name="fullName" autocomplete="name" maxlength="80"><span class="field-error"></span></div>
+        <div class="field"><label for="reg-email">Email</label><input class="input" id="reg-email" name="email" type="email" autocomplete="email" maxlength="120"><span class="field-error"></span></div>
+        <div class="field"><label for="reg-password">Password</label><input class="input" id="reg-password" name="password" type="password" autocomplete="new-password" maxlength="72">
+          <span class="hint">At least 8 characters, with a letter and a number.</span><span class="field-error"></span></div>
+        <div class="field"><label for="reg-confirm">Confirm password</label><input class="input" id="reg-confirm" type="password" autocomplete="new-password" maxlength="72"><span class="field-error"></span></div>
+        <div class="result" role="status"></div>
+        <button class="btn btn-primary btn-lg btn-block" type="submit">Create account</button>
+      </form>
+      <p class="faint" style="text-align:center;margin:18px 0 0">🔒 Passwords are hashed with PBKDF2. This is a demo, so please don't reuse a real password.</p>
+    </section>
+  </main>
+  <script src="js/app.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

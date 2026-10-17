@@ -1,0 +1,7 @@
+out/
+out-test/
+lib/
+config.properties
+.git/
+docs/
+tests/

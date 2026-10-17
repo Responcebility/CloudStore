@@ -1,0 +1,14 @@
+# Local settings with passwords
+config.properties
+
+# Build output and downloaded libraries
+out/
+out-test/
+lib/*.jar
+
+# Editors and OS files
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db

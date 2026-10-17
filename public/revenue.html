@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Revenue Model · CloudStore</title>
+  <meta name="description" content="How CloudStore makes money: commission, vendor plans, CloudStore Plus and delivery fees, with a first-year projection.">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="revenue">
+  <main id="main" class="container">
+    <section class="page-hero glass reveal">
+      <span class="eyebrow">💰 Revenue model</span>
+      <h1>How CloudStore <span class="gradient-text">makes money</span></h1>
+      <p class="lead">A hybrid e-commerce and subscription model: vendors pay a small commission when they sell and can subscribe for lower rates,
+        shoppers can subscribe for free delivery, and delivery fees cover local delivery runners.</p>
+    </section>
+
+    <section class="section grid grid-4">
+      <div class="card glass reveal"><div class="card-icon">🧾</div><h3>Sales commission</h3>
+        <p class="muted">3% to 10% of each sale, depending on the vendor's plan. We only earn when vendors earn.</p></div>
+      <div class="card glass reveal"><div class="card-icon">🏪</div><h3>Vendor plans</h3>
+        <p class="muted">Growth (R149) and Pro (R349) monthly plans trade a fixed fee for lower commission and more features.</p></div>
+      <div class="card glass reveal"><div class="card-icon">⭐</div><h3>CloudStore Plus</h3>
+        <p class="muted">Shoppers pay R49 a month for free delivery on every order: steady recurring income.</p></div>
+      <div class="card glass reveal"><div class="card-icon">🚚</div><h3>Delivery fees</h3>
+        <p class="muted">R35 per order under R500, which pays community delivery runners.</p></div>
+    </section>
+
+    <section class="section" id="plans">
+      <div class="section-head"><div><h2>Plans</h2><p class="muted">Choose a plan below. You need to be logged in to subscribe.</p></div></div>
+      <div class="grid grid-4" id="plan-grid"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+    </section>
+
+    <section class="section grid grid-2">
+      <article class="card glass reveal">
+        <h2>The formulas we use</h2>
+        <p class="muted">Every order total is calculated on the server with these rules (see <code>Pricing.java</code>).</p>
+        <div class="formula">deliveryFee = 0          if subtotal &gt; R500 or shopper has Plus
+            = R35        otherwise
+
+orderTotal  = subtotal + deliveryFee
+commission  = subtotal × vendor plan rate
+payout      = subtotal − commission</div>
+        <p class="muted" style="margin-top:14px"><strong>Example:</strong> a R180 veggie box from a Starter vendor costs the shopper
+          R180 + R35 = <strong>R215</strong>. CloudStore keeps R180 × 10% = <strong>R18</strong>, and the vendor receives <strong>R162</strong>.</p>
+      </article>
+      <article class="card glass reveal">
+        <h2>Sales by category</h2>
+        <p class="muted">Each category's share of all CloudStore sales so far (parts of a whole).</p>
+        <div class="chart-box"><canvas id="category-chart" aria-label="Share of sales by category"></canvas></div>
+      </article>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><div><h2>First-year financial projection</h2>
+        <p class="muted">Change the assumptions to see cash flow, profit and the cost-benefit for CloudStore's first 12 months.</p></div></div>
+      <div class="grid projection-layout">
+        <form class="card glass reveal form-grid" id="projection-form" novalidate>
+          <h3>Assumptions (parameters)</h3>
+          <div class="form-grid two">
+            <div class="field"><label for="ordersPerDay">Orders per day</label><input class="input" id="ordersPerDay" type="number" min="1" max="2000" value="15"><span class="field-error"></span></div>
+            <div class="field"><label for="averageOrder">Average order (R)</label><input class="input" id="averageOrder" type="number" min="20" max="5000" value="220"><span class="field-error"></span></div>
+            <div class="field"><label for="commissionRate">Avg. commission (%)</label><input class="input" id="commissionRate" type="number" min="0" max="30" step="0.5" value="7"><span class="field-error"></span></div>
+            <div class="field"><label for="paidDeliveryShare">Orders paying delivery (%)</label><input class="input" id="paidDeliveryShare" type="number" min="0" max="100" value="60"><span class="field-error"></span></div>
+            <div class="field"><label for="growthVendors">Growth vendors</label><input class="input" id="growthVendors" type="number" min="0" max="5000" value="8"><span class="field-error"></span></div>
+            <div class="field"><label for="proVendors">Pro vendors</label><input class="input" id="proVendors" type="number" min="0" max="5000" value="3"><span class="field-error"></span></div>
+            <div class="field"><label for="plusMembers">Plus members</label><input class="input" id="plusMembers" type="number" min="0" max="100000" value="40"><span class="field-error"></span></div>
+            <div class="field"><label for="growth">Monthly growth (%)</label><input class="input" id="growth" type="number" min="0" max="50" step="0.5" value="8"><span class="field-error"></span></div>
+            <div class="field"><label for="runnerPay">Runner pay per delivery (R)</label><input class="input" id="runnerPay" type="number" min="0" max="200" value="25"><span class="field-error"></span></div>
+            <div class="field"><label for="fixedCosts">Fixed costs per month (R)</label><input class="input" id="fixedCosts" type="number" min="0" max="1000000" value="6500"><span class="field-error"></span>
+              <span class="hint">Hosting, data, marketing, support</span></div>
+            <div class="field"><label for="startupCost">Start-up cost (R)</label><input class="input" id="startupCost" type="number" min="0" max="10000000" value="20000"><span class="field-error"></span>
+              <span class="hint">Spent once in month 1</span></div>
+          </div>
+          <button class="btn btn-primary" type="submit">Recalculate</button>
+        </form>
+
+        <div class="stack">
+          <div class="grid grid-4">
+            <div class="stat glass"><div class="stat-label">Year revenue</div><div class="stat-value" style="font-size:1.4rem" id="p-revenue">–</div></div>
+            <div class="stat glass"><div class="stat-label">Year costs</div><div class="stat-value" style="font-size:1.4rem" id="p-costs">–</div></div>
+            <div class="stat glass"><div class="stat-label">Year profit</div><div class="stat-value" style="font-size:1.4rem" id="p-profit">–</div></div>
+            <div class="stat glass"><div class="stat-label">Break-even</div><div class="stat-value" style="font-size:1.4rem" id="p-breakeven">–</div></div>
+          </div>
+          <div class="card glass"><div class="chart-box tall"><canvas id="projection-chart" aria-label="Monthly revenue, costs and cumulative cash flow"></canvas></div></div>
+          <p class="muted" id="p-ratio"></p>
+        </div>
+      </div>
+      <div class="card glass reveal" style="margin-top:20px">
+        <h3>Month-by-month cash flow</h3>
+        <div class="table-wrap"><table id="projection-table"><thead><tr>
+          <th>Month</th><th class="num">Orders</th><th class="num">Commission</th><th class="num">Subscriptions</th><th class="num">Delivery fees</th>
+          <th class="num">Revenue</th><th class="num">Costs</th><th class="num">Profit / loss</th><th class="num">Cumulative cash</th>
+        </tr></thead><tbody></tbody><tfoot></tfoot></table></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-backdrop" id="plan-modal" hidden>
+    <form class="modal glass glass-strong form-grid" id="plan-form" novalidate aria-labelledby="plan-modal-title">
+      <h2 id="plan-modal-title">Subscribe</h2>
+      <p class="muted" id="plan-modal-text"></p>
+      <div id="shop-fields" class="form-grid">
+        <div class="field"><label for="shopName">Shop name</label><input class="input" id="shopName" name="shopName" maxlength="100" placeholder="e.g. Sipho's Spaza"><span class="field-error"></span></div>
+        <div class="field"><label for="location">Location</label><input class="input" id="location" name="location" maxlength="100" placeholder="e.g. Mabopane"><span class="field-error"></span></div>
+        <div class="field"><label for="description">Short description</label><input class="input" id="description" name="description" maxlength="255" placeholder="What do you sell?"><span class="field-error"></span></div>
+      </div>
+      <div class="row" style="justify-content:flex-end">
+        <button class="btn" type="button" data-cancel>Cancel</button>
+        <button class="btn btn-primary" type="submit">Confirm</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/revenue.js"></script>
+</body>
+</html>

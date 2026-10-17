@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your Cart · CloudStore</title>
+  <meta name="description" content="Review your cart and check out.">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="cart">
+  <main id="main" class="container">
+    <h1 class="reveal" style="margin-top:10px">Your cart</h1>
+    <div class="cart-layout" id="cart-layout">
+      <section class="card glass" aria-label="Cart items"><div id="cart-items"></div></section>
+
+      <aside class="stack">
+        <section class="card glass" aria-label="Order summary">
+          <h3>Order summary</h3>
+          <div class="summary-row"><span>Subtotal</span><span id="sum-subtotal">R 0.00</span></div>
+          <div class="summary-row"><span>Delivery</span><span id="sum-delivery">R 0.00</span></div>
+          <div class="summary-row total"><span>Total</span><span id="sum-total">R 0.00</span></div>
+          <div id="free-delivery" class="faint" style="margin-top:10px"></div>
+        </section>
+
+        <form class="card glass form-grid" id="checkout-form" novalidate>
+          <h3>Checkout</h3>
+          <div id="login-note" class="alert alert-info" hidden>Please <a href="login.html?next=cart.html">log in or create an account</a> to place your order.</div>
+          <div class="field"><label for="address">Delivery address</label>
+            <input class="input" id="address" name="address" maxlength="200" autocomplete="street-address" placeholder="e.g. Block L, 1234 Soshanguve"><span class="field-error"></span></div>
+          <div class="field"><label for="phone">Phone number</label>
+            <input class="input" id="phone" name="phone" maxlength="15" autocomplete="tel" inputmode="tel" placeholder="e.g. 0712345678"><span class="field-error"></span></div>
+          <div class="field"><label for="paymentMethod">Payment</label>
+            <select class="input" id="paymentMethod" name="paymentMethod">
+              <option>Cash on delivery</option>
+              <option>Card on delivery</option>
+            </select></div>
+          <div id="checkout-result" role="status"></div>
+          <button class="btn btn-primary btn-lg btn-block" type="submit" id="place-order">Place order</button>
+          <p class="faint" style="margin:0">Demo prototype: no real payment is taken. Please don't enter real personal details.</p>
+        </form>
+      </aside>
+    </div>
+  </main>
+  <script src="js/app.js"></script>
+  <script src="js/cart.js"></script>
+</body>
+</html>

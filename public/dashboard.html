@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Dashboard · CloudStore</title>
+  <meta name="description" content="CloudStore sales statistics and administration.">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="dashboard">
+  <main id="main" class="container">
+    <section class="page-hero glass">
+      <span class="eyebrow">📊 Admin dashboard</span>
+      <h1>Sales <span class="gradient-text">insights</span></h1>
+      <p class="lead">Live statistics from the CloudStore database: totals, averages, conversions and trends. Cancelled orders are excluded.</p>
+    </section>
+
+    <div id="dashboard" hidden>
+      <section class="section grid grid-4">
+        <div class="stat glass"><div class="stat-label">Revenue (orders)</div><div class="stat-value" id="t-revenue">–</div><div class="stat-note" id="t-orders"></div></div>
+        <div class="stat glass"><div class="stat-label">Commission earned</div><div class="stat-value" id="t-commission">–</div><div class="stat-note" id="t-commission-share"></div></div>
+        <div class="stat glass"><div class="stat-label">Subscriptions / month</div><div class="stat-value" id="t-mrr">–</div><div class="stat-note">vendor plans + Plus</div></div>
+        <div class="stat glass"><div class="stat-label">Community</div><div class="stat-value" id="t-community">–</div><div class="stat-note" id="t-community-note"></div></div>
+      </section>
+
+      <section class="section grid grid-2">
+        <div class="card glass">
+          <h2>Order value statistics</h2>
+          <p class="muted">Elementary statistics of every order total (in rand).</p>
+          <div class="grid grid-3">
+            <div class="stat glass"><div class="stat-label">Mean</div><div class="stat-value" style="font-size:1.4rem" id="s-mean">–</div></div>
+            <div class="stat glass"><div class="stat-label">Median</div><div class="stat-value" style="font-size:1.4rem" id="s-median">–</div></div>
+            <div class="stat glass"><div class="stat-label">Range</div><div class="stat-value" style="font-size:1.4rem" id="s-range">–</div><div class="stat-note" id="s-minmax"></div></div>
+          </div>
+          <p class="muted" style="margin-top:14px" id="s-free"></p>
+        </div>
+        <div class="card glass">
+          <h2>Conversions</h2>
+          <p class="muted">Last 30 days, converted from per-day to per-month (× 30.44 days).</p>
+          <div class="table-wrap"><table><tbody id="conversions"></tbody></table></div>
+        </div>
+      </section>
+
+      <section class="section grid grid-2">
+        <div class="card glass"><h3>Daily revenue: last 30 days</h3><p class="faint">Line chart: trend over time</p>
+          <div class="chart-box"><canvas id="trend-chart" aria-label="Daily revenue for the last 30 days"></canvas></div></div>
+        <div class="card glass"><h3>Sales by category</h3><p class="faint">Bar chart: comparing categories</p>
+          <div class="chart-box"><canvas id="category-chart" aria-label="Sales by category"></canvas></div></div>
+        <div class="card glass"><h3>Orders by value band</h3><p class="faint">How many orders fall in each price range</p>
+          <div class="chart-box"><canvas id="bands-chart" aria-label="Orders by value band"></canvas></div></div>
+        <div class="card glass"><h3>Platform income mix</h3><p class="faint">Pie chart: parts of the whole income</p>
+          <div class="chart-box"><canvas id="income-chart" aria-label="Platform income mix"></canvas></div></div>
+      </section>
+
+      <section class="section grid grid-2">
+        <div class="card glass"><h3>Top products</h3><div class="table-wrap"><table>
+          <thead><tr><th>Product</th><th class="num">Units</th><th class="num">Sales</th></tr></thead><tbody id="top-products"></tbody></table></div></div>
+        <div class="card glass"><h3>Plans</h3><div class="table-wrap"><table>
+          <thead><tr><th>Plan</th><th class="num">Members</th></tr></thead><tbody id="plans"></tbody></table></div></div>
+      </section>
+
+      <section class="section card glass">
+        <h2>Recent orders</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Order</th><th>Customer</th><th>Date</th><th>Payment</th><th class="num">Total</th><th>Status</th></tr></thead>
+          <tbody id="orders"></tbody></table></div>
+      </section>
+
+      <section class="section grid" id="admin-grid" style="grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)">
+        <div class="card glass"><h2>Contact messages</h2><div id="messages" class="stack"></div></div>
+        <form class="card glass form-grid" id="product-form" novalidate>
+          <h2>Add a product</h2>
+          <div class="field"><label for="p-vendor">Vendor</label><select class="input" id="p-vendor" name="vendorId"></select><span class="field-error"></span></div>
+          <div class="field"><label for="p-name">Name</label><input class="input" id="p-name" name="name" maxlength="100"><span class="field-error"></span></div>
+          <div class="field"><label for="p-description">Description</label><input class="input" id="p-description" name="description" maxlength="300"><span class="field-error"></span></div>
+          <div class="form-grid two">
+            <div class="field"><label for="p-category">Category</label><select class="input" id="p-category" name="category"></select></div>
+            <div class="field"><label for="p-emoji">Emoji</label><input class="input" id="p-emoji" name="emoji" maxlength="8" placeholder="🛍️"></div>
+            <div class="field"><label for="p-price">Price (R)</label><input class="input" id="p-price" name="price" type="number" min="1" max="50000" step="0.01"><span class="field-error"></span></div>
+            <div class="field"><label for="p-stock">Stock</label><input class="input" id="p-stock" name="stock" type="number" min="0" max="10000" step="1"><span class="field-error"></span></div>
+          </div>
+          <button class="btn btn-primary" type="submit">Add product</button>
+        </form>
+      </section>
+    </div>
+  </main>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/product-form.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shop · CloudStore</title>
+  <meta name="description" content="Browse products from local township and campus vendors on CloudStore.">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="shop">
+  <main id="main" class="container">
+    <section class="page-hero glass reveal">
+      <span class="eyebrow">🛍️ Products &amp; services</span>
+      <h1>Everything local, <span class="gradient-text">in one place</span></h1>
+      <p class="lead">Meals, groceries, crafts, electronics, beauty and stationery from community vendors.
+        Delivery is R35, or free on orders over R500.</p>
+    </section>
+
+    <div class="toolbar glass section" style="margin-top:24px" role="search">
+      <label class="visually-hidden" for="search">Search products</label>
+      <input id="search" class="input search-input" type="search" maxlength="60" placeholder="Search products, vendors or categories…">
+      <div class="chips" id="categories" aria-label="Filter by category"></div>
+    </div>
+
+    <p class="faint" id="result-count" aria-live="polite"></p>
+    <div class="products-grid" id="products"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+
+    <section class="section">
+      <div class="section-head"><div><h2>Meet our vendors</h2><p class="muted">The community businesses behind every product.</p></div></div>
+      <div class="grid grid-3" id="vendors"></div>
+    </section>
+  </main>
+  <script src="js/app.js"></script>
+  <script src="js/shop.js"></script>
+</body>
+</html>

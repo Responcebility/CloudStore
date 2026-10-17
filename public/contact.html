@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact · CloudStore</title>
+  <meta name="description" content="Get in touch with the CloudStore team.">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="contact">
+  <main id="main" class="container">
+    <section class="page-hero glass reveal">
+      <span class="eyebrow">✉️ Contact</span>
+      <h1>We'd love to <span class="gradient-text">hear from you</span></h1>
+      <p class="lead">Questions about an order, interested in selling, or feedback on the prototype? Send us a message and we'll reply within two working days.</p>
+    </section>
+
+    <section class="section grid" style="grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)" id="contact-layout">
+      <form class="card glass reveal form-grid" id="contact-form" novalidate>
+        <h2>Send a message</h2>
+        <div class="form-grid two">
+          <div class="field"><label for="name">Your name</label><input class="input" id="name" name="name" maxlength="80" autocomplete="name" required><span class="field-error"></span></div>
+          <div class="field"><label for="email">Email address</label><input class="input" id="email" name="email" type="email" maxlength="120" autocomplete="email" required><span class="field-error"></span></div>
+        </div>
+        <div class="field"><label for="subject">Subject</label><input class="input" id="subject" name="subject" maxlength="120" required><span class="field-error"></span></div>
+        <div class="field"><label for="message">Message</label><textarea class="input" id="message" name="message" maxlength="2000" required></textarea>
+          <span class="hint"><span id="message-count">0</span> / 2000 characters</span><span class="field-error"></span></div>
+        <div id="contact-result" role="status"></div>
+        <button class="btn btn-primary btn-lg" type="submit">Send message</button>
+      </form>
+
+      <div class="stack">
+        <div class="card glass reveal">
+          <h3>Other ways to reach us</h3>
+          <ul class="list-check">
+            <li>Chat to CloudBot (bottom-right corner) for instant answers</li>
+            <li>Vendors: choose a plan on the <a href="revenue.html#plans">Revenue Model</a> page to open a shop</li>
+            <li>Based in Tshwane, Gauteng, South Africa</li>
+          </ul>
+        </div>
+        <div class="card glass reveal">
+          <h3>Frequently asked questions</h3>
+          <details><summary><strong>How much is delivery?</strong></summary><p class="muted">R35 per order, free on orders over R500 or for CloudStore Plus members.</p></details>
+          <hr class="divider">
+          <details><summary><strong>How do I pay?</strong></summary><p class="muted">Cash or card when your order is delivered.</p></details>
+          <hr class="divider">
+          <details><summary><strong>Can I sell on CloudStore?</strong></summary><p class="muted">Yes! Start free on the Starter plan and pay 10% only when you sell.</p></details>
+          <hr class="divider">
+          <details><summary><strong>Is my password safe?</strong></summary><p class="muted">Passwords are hashed with PBKDF2 and never stored as plain text.</p></details>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="js/app.js"></script>
+  <script src="js/contact.js"></script>
+</body>
+</html>

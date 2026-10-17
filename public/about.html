@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>About · CloudStore</title>
+  <meta name="description" content="The problem CloudStore solves, who it serves, and how the prototype was built.">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="about">
+  <main id="main" class="container">
+    <section class="page-hero glass reveal">
+      <span class="eyebrow">ℹ️ About CloudStore</span>
+      <h1>Helping community businesses <span class="gradient-text">sell online</span></h1>
+      <p class="lead">A digital marketplace for township and campus vendors in Tshwane: a prototype investigation.</p>
+    </section>
+
+    <section class="section grid grid-2">
+      <article class="card glass reveal">
+        <div class="card-icon">❗</div>
+        <h2>The problem we solve</h2>
+        <p class="muted">Home cooks, small farmers, crafters and other informal vendors in Tshwane's townships and around its campuses
+          depend on foot traffic and word of mouth, so they cannot reach customers beyond their street and lose sales to large retailers.
+          At the same time, students and residents often travel long distances or pay high prices for everyday goods that are made close by.
+          Most of these vendors cannot afford to build and run their own website. CloudStore solves this by giving any community vendor
+          a ready-made online shop with delivery, so local money and local jobs stay in the community.</p>
+      </article>
+      <article class="card glass reveal">
+        <div class="card-icon">🎯</div>
+        <h2>Aim &amp; objectives</h2>
+        <p><strong>Aim:</strong> <span class="muted">To design, build and host a working e-commerce prototype that lets community vendors sell online to nearby shoppers.</span></p>
+        <ol class="muted" style="padding-left:20px;margin:0">
+          <li>Research at least five similar digital businesses and identify the gap CloudStore fills.</li>
+          <li>Build a hosted website where shoppers can browse, search and order from at least five vendors.</li>
+          <li>Calculate order totals, delivery fees and commission correctly for every order.</li>
+          <li>Offer a subscription-based revenue model with at least three vendor plans and one shopper plan.</li>
+          <li>Summarise sales with mean, median, range and charts on an admin dashboard.</li>
+        </ol>
+      </article>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><div><h2>Why it matters in South Africa</h2>
+        <p class="muted">Digital entrepreneurship for sustainable community development.</p></div></div>
+      <div class="grid grid-3">
+        <div class="card glass reveal"><div class="card-icon">💼</div><h3>Jobs and income</h3>
+          <p class="muted">Youth unemployment is one of South Africa's biggest challenges. Every vendor who sells more, and every delivery
+            runner who gets work, is income earned inside the community.</p></div>
+        <div class="card glass reveal"><div class="card-icon">🏘️</div><h3>Township economies</h3>
+          <p class="muted">Spending at large malls leaves the township. A local marketplace keeps that money circulating between
+            neighbours and small businesses.</p></div>
+        <div class="card glass reveal"><div class="card-icon">📱</div><h3>Digital inclusion</h3>
+          <p class="muted">Vendors build digital skills by running an online shop, without needing to code or pay for a website.</p></div>
+      </div>
+    </section>
+
+    <section class="section grid grid-2">
+      <article class="card glass reveal">
+        <div class="card-icon">🧩</div>
+        <h2>What the prototype does</h2>
+        <ul class="list-check">
+          <li>Product catalogue with search and category filters</li>
+          <li>Cart with live delivery-fee calculation and free delivery over R500</li>
+          <li>Secure accounts (passwords are hashed, never stored as plain text)</li>
+          <li>Checkout with cash or card on delivery, and order history</li>
+          <li>Vendor plans that open a shop and let vendors add products</li>
+          <li>CloudStore Plus subscription for free delivery</li>
+          <li>CloudBot assistant for quick answers and product search</li>
+          <li>Admin dashboard with sales statistics and charts</li>
+        </ul>
+      </article>
+      <article class="card glass reveal">
+        <div class="card-icon">🛠️</div>
+        <h2>Methods &amp; tools</h2>
+        <div class="table-wrap">
+          <table>
+            <tbody>
+              <tr><th>Back end</th><td>Java 19 (built-in HTTP server), JDBC</td></tr>
+              <tr><th>Database</th><td>MySQL 8 (users, products, orders, plans, messages)</td></tr>
+              <tr><th>Front end</th><td>HTML5, CSS3 (glassmorphism design), JavaScript</td></tr>
+              <tr><th>Charts</th><td>Chart.js for the dashboard and revenue projections</td></tr>
+              <tr><th>Assistant</th><td>CloudBot, a rule-based (no-code style) assistant</td></tr>
+              <tr><th>Security</th><td>PBKDF2 password hashing, HttpOnly session cookies, parameterised SQL</td></tr>
+              <tr><th>Collaboration</th><td>GitHub repository for code and version control</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+  </main>
+  <script src="js/app.js"></script>
+</body>
+</html>
