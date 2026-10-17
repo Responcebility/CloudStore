@@ -3,8 +3,9 @@
  * Author:  Kasi-Crunch group (JGA 2026)
  * Date:    2026-10-17
  * Purpose: The admin dashboard: sales and profit statistics (mean, median,
- *          range, percentages, gross margin), daily-to-monthly conversions,
- *          chart data, recent orders with status updates, and messages.
+ *          range, percentages, gross margin), delivery distances and Crunch
+ *          Pass figures, daily-to-monthly conversions, chart data, recent
+ *          orders with status updates, and contact messages.
  */
 package kasicrunch;
 
@@ -23,7 +24,7 @@ import java.util.Map;
 public final class AdminHandler extends ApiHandler {
 
     private static final int TREND_DAYS = 30;
-    private static final String[] STATUSES = {"Placed", "Preparing", "Out for delivery", "Delivered", "Cancelled"};
+    private static final String[] STATUSES = {"Placed", "Preparing", "Ready", "Out for delivery", "Delivered", "Collected", "Cancelled"};
 
     @Override
     protected void route(HttpExchange exchange, String method, String path) throws Exception {
@@ -40,23 +41,36 @@ public final class AdminHandler extends ApiHandler {
     private void stats(HttpExchange exchange) throws Exception {
         try (Connection connection = Database.connect()) {
             List<Double> orderTotals = new ArrayList<>();
-            double revenue = 0, foodSales = 0, discounts = 0, deliveryFees = 0, foodCost = 0;
+            List<Double> distances = new ArrayList<>();
+            double revenue = 0, foodSales = 0, deliveryFees = 0, foodCost = 0, waivedFees = 0;
+            int deliveries = 0, collections = 0;
             try (Statement statement = connection.createStatement();
                  ResultSet row = statement.executeQuery(
-                         "SELECT total, subtotal, discount, delivery_fee, food_cost FROM orders WHERE status <> 'Cancelled'")) {
+                         "SELECT total, subtotal, delivery_fee, food_cost, fulfilment, distance_km, pass_km FROM orders WHERE status <> 'Cancelled'")) {
                 while (row.next()) {
                     orderTotals.add(row.getDouble(1));
                     revenue += row.getDouble(1);
                     foodSales += row.getDouble(2);
-                    discounts += row.getDouble(3);
-                    deliveryFees += row.getDouble(4);
-                    foodCost += row.getDouble(5);
+                    deliveryFees += row.getDouble(3);
+                    foodCost += row.getDouble(4);
+                    if ("delivery".equals(row.getString(5))) {
+                        deliveries++;
+                        distances.add(row.getDouble(6));
+                        // What the customer would have paid without their pass.
+                        waivedFees += Pricing.deliveryFee(row.getDouble(6), 0) - row.getDouble(3);
+                    } else {
+                        collections++;
+                    }
                 }
             }
-            // Food sales after club discounts, minus what the food cost us.
-            double netFoodSales = foodSales - discounts;
-            double clubIncome = scalarDouble(connection, "SELECT COALESCE(SUM(p.price_monthly), 0) FROM subscriptions s"
-                    + " JOIN plans p ON p.id = s.plan_id WHERE s.status = 'active'");
+
+            double passIncome = scalarDouble(connection, "SELECT COALESCE(SUM(price), 0) FROM passes WHERE status = 'active' AND ends_at > NOW()");
+            long activePasses = Database.count(connection, "SELECT COUNT(*) FROM passes WHERE status = 'active' AND ends_at > NOW()");
+            List<Double> passKms = new ArrayList<>();
+            try (Statement statement = connection.createStatement();
+                 ResultSet row = statement.executeQuery("SELECT max_km FROM passes WHERE status = 'active' AND ends_at > NOW()")) {
+                while (row.next()) passKms.add((double) row.getInt(1));
+            }
 
             // Daily trend for the last 30 days, with empty days filled in as zero.
             Map<String, double[]> daily = new LinkedHashMap<>();
@@ -101,49 +115,38 @@ public final class AdminHandler extends ApiHandler {
             List<Map<String, Object>> topItems = new ArrayList<>();
             try (Statement statement = connection.createStatement();
                  ResultSet row = statement.executeQuery("""
-                         SELECT p.name, p.emoji, SUM(oi.quantity), SUM(oi.quantity * oi.unit_price) FROM order_items oi
+                         SELECT p.name, SUM(oi.quantity), SUM(oi.quantity * oi.unit_price) FROM order_items oi
                          JOIN products p ON p.id = oi.product_id JOIN orders o ON o.id = oi.order_id
-                         WHERE o.status <> 'Cancelled' GROUP BY p.id, p.name, p.emoji ORDER BY 3 DESC LIMIT 5""")) {
+                         WHERE o.status <> 'Cancelled' GROUP BY p.id, p.name ORDER BY 2 DESC LIMIT 5""")) {
                 while (row.next()) {
-                    topItems.add(Json.map("name", row.getString(1), "emoji", row.getString(2),
-                            "units", row.getLong(3), "sales", Pricing.round2(row.getDouble(4))));
+                    topItems.add(Json.map("name", row.getString(1), "units", row.getLong(2), "sales", Pricing.round2(row.getDouble(3))));
                 }
             }
 
-            List<Map<String, Object>> clubs = new ArrayList<>();
-            try (Statement statement = connection.createStatement();
-                 ResultSet row = statement.executeQuery("""
-                         SELECT p.name, COUNT(s.id) FROM plans p
-                         LEFT JOIN subscriptions s ON s.plan_id = p.id AND s.status = 'active'
-                         GROUP BY p.id, p.name ORDER BY p.price_monthly""")) {
-                while (row.next()) {
-                    clubs.add(Json.map("club", row.getString(1), "members", row.getLong(2)));
-                }
+            // Delivery distances grouped into bands.
+            int[] distanceBands = new int[4];
+            for (double km : distances) {
+                if (km <= 3) distanceBands[0]++;
+                else if (km <= 6) distanceBands[1]++;
+                else if (km <= 9) distanceBands[2]++;
+                else distanceBands[3]++;
             }
+            List<Map<String, Object>> distanceGroups = List.of(
+                    Json.map("band", "0–3 km", "count", distanceBands[0]),
+                    Json.map("band", "3–6 km", "count", distanceBands[1]),
+                    Json.map("band", "6–9 km", "count", distanceBands[2]),
+                    Json.map("band", "Over 9 km", "count", distanceBands[3]));
 
-            // Order values grouped into bands, to see where most orders fall.
-            int[] bands = new int[3];
-            for (double total : orderTotals) {
-                if (total < 100) bands[0]++;
-                else if (total <= Pricing.FREE_DELIVERY_THRESHOLD) bands[1]++;
-                else bands[2]++;
-            }
-            List<Map<String, Object>> orderBands = List.of(
-                    Json.map("band", "Under R100", "count", bands[0]),
-                    Json.map("band", "R100 – R250", "count", bands[1]),
-                    Json.map("band", "Over R250", "count", bands[2]));
-
+            int orderCount = orderTotals.size();
             Http.json(exchange, 200, Json.map(
                     "totals", Json.map(
-                            "orders", orderTotals.size(),
+                            "orders", orderCount,
                             "revenue", Pricing.round2(revenue),
                             "foodSales", Pricing.round2(foodSales),
-                            "discounts", Pricing.round2(discounts),
                             "deliveryFees", Pricing.round2(deliveryFees),
                             "foodCost", Pricing.round2(foodCost),
-                            "grossProfit", Pricing.grossProfit(netFoodSales, foodCost),
-                            "grossMargin", Pricing.marginPercent(netFoodSales, foodCost),
-                            "clubIncomeMonthly", Pricing.round2(clubIncome),
+                            "grossProfit", Pricing.grossProfit(foodSales, foodCost),
+                            "grossMargin", Pricing.marginPercent(foodSales, foodCost),
                             "customers", Database.count(connection, "SELECT COUNT(*) FROM users WHERE role = 'customer'"),
                             "menuItems", Database.count(connection, "SELECT COUNT(*) FROM products"),
                             "messages", Database.count(connection, "SELECT COUNT(*) FROM contact_messages")),
@@ -152,8 +155,19 @@ public final class AdminHandler extends ApiHandler {
                             "median", Statistics.median(orderTotals),
                             "range", Statistics.range(orderTotals),
                             "min", orderTotals.isEmpty() ? 0.0 : orderTotals.stream().mapToDouble(Double::doubleValue).min().getAsDouble(),
-                            "max", orderTotals.isEmpty() ? 0.0 : orderTotals.stream().mapToDouble(Double::doubleValue).max().getAsDouble(),
-                            "freeDeliveryShare", Statistics.percentage(bands[2], orderTotals.size())),
+                            "max", orderTotals.isEmpty() ? 0.0 : orderTotals.stream().mapToDouble(Double::doubleValue).max().getAsDouble()),
+                    "delivery", Json.map(
+                            "deliveries", deliveries,
+                            "collections", collections,
+                            "deliveryShare", Statistics.percentage(deliveries, orderCount),
+                            "meanDistance", Statistics.mean(distances),
+                            "medianDistance", Statistics.median(distances),
+                            "distanceRange", Statistics.range(distances),
+                            "feesWaivedByPasses", Pricing.round2(waivedFees)),
+                    "passes", Json.map(
+                            "active", activePasses,
+                            "incomeThisMonth", Pricing.round2(passIncome),
+                            "meanKm", Statistics.mean(passKms)),
                     "conversions", Json.map(
                             "ordersPerDay", ordersPerDay,
                             "ordersPerMonth", Statistics.dailyToMonthly(ordersPerDay),
@@ -162,20 +176,19 @@ public final class AdminHandler extends ApiHandler {
                     "trend", trend,
                     "byCategory", byCategory,
                     "topItems", topItems,
-                    "clubs", clubs,
-                    "orderBands", orderBands));
+                    "distanceGroups", distanceGroups));
         }
     }
 
     private void orders(HttpExchange exchange) throws Exception {
         List<Map<String, Object>> orders = new ArrayList<>();
-        String sql = "SELECT o.id, u.full_name, o.total, o.payment_method, o.status, DATE_FORMAT(o.created_at, '%Y-%m-%d %H:%i')"
+        String sql = "SELECT o.id, u.full_name, o.fulfilment, o.distance_km, o.total, o.status, DATE_FORMAT(o.created_at, '%Y-%m-%d %H:%i')"
                 + " FROM orders o JOIN users u ON u.id = o.user_id ORDER BY o.created_at DESC, o.id DESC LIMIT 25";
         try (Connection connection = Database.connect(); Statement statement = connection.createStatement();
              ResultSet row = statement.executeQuery(sql)) {
             while (row.next()) {
-                orders.add(Json.map("id", row.getLong(1), "customer", row.getString(2), "total", row.getDouble(3),
-                        "paymentMethod", row.getString(4), "status", row.getString(5), "createdAt", row.getString(6)));
+                orders.add(Json.map("id", row.getLong(1), "customer", row.getString(2), "fulfilment", row.getString(3),
+                        "distanceKm", row.getDouble(4), "total", row.getDouble(5), "status", row.getString(6), "createdAt", row.getString(7)));
             }
         }
         Http.json(exchange, 200, Json.map("orders", orders, "statuses", List.of(STATUSES)));

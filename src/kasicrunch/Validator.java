@@ -84,6 +84,17 @@ public final class Validator {
         return value == Math.floor(value) ? String.valueOf((long) value) : String.valueOf(value);
     }
 
+    /** A decimal number within a range, e.g. a delivery distance in km. */
+    public static double decimalInRange(String raw, String label, double min, double max, String unit) {
+        try {
+            double value = Double.parseDouble(raw == null ? "" : raw.trim());
+            if (Double.isNaN(value) || value < min || value > max) throw new NumberFormatException();
+            return Pricing.round2(value);
+        } catch (NumberFormatException e) {
+            throw ApiException.badRequest("Please enter a " + label + " between " + plain(min) + " and " + plain(max) + " " + unit + ".");
+        }
+    }
+
     public static String oneOf(Map<String, String> input, String field, String label, String... allowed) {
         String value = input.getOrDefault(field, "").trim();
         for (String option : allowed) {

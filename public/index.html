@@ -3,58 +3,102 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kasi-Crunch · Crunch outside, juicy inside</title>
-  <meta name="description" content="Kasi-Crunch: township fried chicken, ordered online and delivered around Soshanguve.">
+  <meta name="theme-color" content="#cf343b">
+  <title>Kasi-Crunch | Crunch outside, juicy inside</title>
+  <meta name="description" content="Order Kasi-Crunch online for delivery or collection. Crunch outside, juicy inside.">
   <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-page="home">
-  <main id="main" class="container">
-
-    <section class="hero">
-      <div class="hero-inner">
-        <span class="eyebrow">🍗 Kasi fried chicken · Soshanguve</span>
-        <h1>Kasi-Crunch</h1>
-        <p class="slogan">"Crunch outside, juicy inside"</p>
-        <p class="lead">Golden fried chicken, kotas and combos made in the kasi, ordered in a few taps and delivered hot to your door.</p>
+  <main id="main">
+    <section class="container hero">
+      <div>
+        <p class="eyebrow">Your new local favourite</p>
+        <h1>Kasi-<em>Crunch</em></h1>
+        <p class="slogan">Crunch outside, juicy inside.</p>
+        <p class="lead">Burgers, wings, crunchy chicken and more, made fresh in our kasi kitchen. Get it delivered or swing by and collect.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary btn-lg" href="menu.html">Order now →</a>
-          <a class="btn btn-lg" href="revenue.html#clubs">Join a club</a>
+          <a class="button button-primary" href="menu.html">Order now <span aria-hidden="true">↗</span></a>
+          <a class="button button-outline" href="pass.html">Get free delivery</a>
         </div>
-        <div class="trust">
-          <span>🚚 R25 delivery · free over R250</span>
-          <span>💵 Pay cash or card on delivery</span>
+        <div class="hero-stats">
+          <div><strong>Made fresh</strong><span>When you order</span></div>
+          <div><strong>R16/km</strong><span>Delivery</span></div>
+          <div><strong>Free</strong><span>With Crunch Pass</span></div>
+        </div>
+      </div>
+      <div class="hero-art">
+        <div class="hero-sticker">HOT<br><span>&amp;</span><br>FRESH</div>
+        <img src="img/background.jpg" alt="Golden fried chicken in paper trays">
+      </div>
+    </section>
+
+    <section class="ticker" aria-label="Our promise">
+      <div class="ticker-track" aria-hidden="true">
+        CRUNCH OUTSIDE <span>✳</span> JUICY INSIDE <span>✳</span> MADE FRESH IN THE KASI <span>✳</span> DELIVERY OR COLLECTION <span>✳</span>
+        CRUNCH OUTSIDE <span>✳</span> JUICY INSIDE <span>✳</span> MADE FRESH IN THE KASI <span>✳</span> DELIVERY OR COLLECTION <span>✳</span>
+      </div>
+      <span class="visually-hidden">Crunch outside, juicy inside. Made fresh in the kasi. Delivery or collection.</span>
+    </section>
+
+    <section class="container section">
+      <div class="section-heading">
+        <div><p class="eyebrow">Good things are cooking</p><h2>Meet your <em>new favourites.</em></h2></div>
+        <a class="button button-dark" href="menu.html">See the full menu ↗</a>
+      </div>
+      <div class="menu-grid" id="bestsellers"><div class="loading-card">Getting the good stuff ready…</div></div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container grid grid-2" style="align-items:center">
+        <div>
+          <p class="eyebrow">Crunch Pass</p>
+          <h2>Free delivery, <em>your way.</em></h2>
+          <p class="lead">Choose how far you want free delivery to reach, from 1 to 20 km. The further your pass reaches, the more it costs for the month.</p>
+          <a class="button button-primary" href="pass.html">Build your pass ↗</a>
+        </div>
+        <div class="pass-card">
+          <p class="muted" style="margin:0">Example: a 5 km Crunch Pass</p>
+          <div class="pass-price">R124<small> / month</small></div>
+          <ul class="ticks">
+            <li>Free delivery on every order within 5 km</li>
+            <li>Further away? Only the extra km are charged</li>
+            <li>Lasts 30 days. Change or cancel any time</li>
+          </ul>
         </div>
       </div>
     </section>
 
-    <section class="section">
-      <div class="section-head">
-        <div><h2>Bestsellers</h2><p class="muted">What the kasi orders most.</p></div>
-        <a class="btn" href="menu.html">Full menu →</a>
-      </div>
-      <div class="menu-grid" id="bestsellers"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
-    </section>
-
-    <section class="section grid grid-3">
-      <div class="card glass step"><span class="step-num">1</span><div><strong>Pick your food</strong><span>Browse the menu by category or ask Crunchy for ideas.</span></div></div>
-      <div class="card glass step"><span class="step-num">2</span><div><strong>Check out</strong><span>See the delivery fee before you pay. No surprises.</span></div></div>
-      <div class="card glass step"><span class="step-num">3</span><div><strong>We deliver it hot</strong><span>Local runners bring it to your door. Pay when it arrives.</span></div></div>
-    </section>
-
-    <section class="section card glass">
-      <span class="eyebrow">Our elevator pitch</span>
-      <div class="grid grid-4">
-        <div><h3>😩 Problem</h3><p class="muted">Good fried chicken is often a taxi ride away, and delivery apps don't always reach kasi streets.</p></div>
-        <div><h3>💡 Solution</h3><p class="muted">Kasi-Crunch: kasi-made fried chicken you order online, delivered by local runners.</p></div>
-        <div><h3>🎯 Who it's for</h3><p class="muted">Students, families and workers in Soshanguve and nearby who want great food, fast.</p></div>
-        <div><h3>🤖 How AI helps</h3><p class="muted">Crunchy answers questions and suggests meals instantly. Smarter AI recommendations come next.</p></div>
+    <section class="container section">
+      <div class="section-heading"><div><p class="eyebrow">Easy as 1, 2, 3</p><h2>How it <em>works.</em></h2></div></div>
+      <div class="grid grid-3">
+        <div class="card"><div class="step-num">1</div><h3>Pick your food</h3><p class="muted">Browse the menu by category, or ask Crunchy for ideas.</p></div>
+        <div class="card"><div class="step-num">2</div><h3>Delivery or collection</h3><p class="muted">See the exact delivery fee for your distance before you pay. Collection is free.</p></div>
+        <div class="card"><div class="step-num">3</div><h3>Enjoy it hot</h3><p class="muted">Pay cash or card when your food arrives or when you collect.</p></div>
       </div>
     </section>
 
+    <section class="story">
+      <div class="story-photo"><img src="img/menu/photo-1550547660-d9450f859349.jpg" alt="A freshly made burger with golden fries"></div>
+      <div class="story-copy">
+        <p class="eyebrow">Our elevator pitch</p>
+        <h2>Good food.<br><em>Close to home.</em></h2>
+        <p><strong>Problem:</strong> good fast food is often a taxi ride away, and delivery apps don't always reach kasi streets.</p>
+        <p><strong>Solution:</strong> Kasi-Crunch, our own kasi kitchen with simple online ordering, delivery and collection.</p>
+        <p><strong>Who it's for:</strong> students, families and workers in Soshanguve and nearby.</p>
+        <p><strong>How AI helps:</strong> Crunchy answers questions and suggests meals instantly; smarter AI recommendations come next.</p>
+        <a class="button button-outline" href="about.html">Read our story ↗</a>
+      </div>
+    </section>
+
+    <section class="last-call">
+      <p class="eyebrow">You know what to do</p>
+      <h2>Good food is <em>calling.</em></h2>
+      <a class="button button-dark" href="menu.html">Let's eat ↗</a>
+    </section>
   </main>
   <script src="js/app.js"></script>
   <script src="js/home.js"></script>

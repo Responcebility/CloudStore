@@ -3,51 +3,58 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Customer Persona · Kasi-Crunch</title>
+  <meta name="theme-color" content="#cf343b">
+  <title>Customer persona | Kasi-Crunch</title>
   <meta name="description" content="Meet Thandi, the customer Kasi-Crunch is designed for.">
   <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-page="persona">
-  <main id="main" class="container">
-    <section class="page-hero glass">
-      <span class="eyebrow">Customer persona</span>
-      <h1>Who we <span class="accent-text">cook for</span></h1>
+  <main id="main" class="container" style="padding-bottom:80px">
+    <section class="page-head">
+      <p class="eyebrow">Customer persona</p>
+      <h1>Who we <em>cook for.</em></h1>
       <p class="lead">Our main customer, based on the problem we researched. Thandi is a fictional persona.</p>
     </section>
 
-    <section class="section">
-      <article class="persona glass" aria-labelledby="persona-name">
-        <div class="persona-avatar" aria-hidden="true">👩🏾‍🎓</div>
-        <div>
-          <h2 id="persona-name">Thandi, 20, the hungry student</h2>
-          <p class="muted">Second-year ICT student living in a student residence in Soshanguve, studying on a bursary allowance.</p>
-          <div class="facts">
-            <span class="tag tag-soft">📍 Soshanguve, Tshwane</span>
-            <span class="tag tag-soft">💰 Tight monthly budget</span>
-            <span class="tag tag-soft">📱 Android phone, prepaid data</span>
-            <span class="tag tag-soft">🍗 Orders 2–3 times a week</span>
-          </div>
-          <div class="persona-cols">
-            <div><h3>🎯 Wants</h3><ul><li>A filling meal between lectures</li><li>Good value for money</li><li>Food delivered to her res</li></ul></div>
-            <div><h3>😣 Frustrations</h3><ul><li>Taxi fare to the mall</li><li>Apps that don't deliver to her area</li><li>Surprise fees at checkout</li></ul></div>
-            <div><h3>✅ How we help</h3><ul><li>Student Saver combo</li><li>Delivery fee shown up front</li><li>Crunch Club free delivery</li></ul></div>
-          </div>
-          <p class="quote">"I just want proper chicken and chips delivered to my res without spending my whole allowance on transport."</p>
+    <article class="card persona" aria-labelledby="persona-name">
+      <div class="persona-photo" aria-hidden="true">👩🏾‍🎓</div>
+      <div>
+        <h2 id="persona-name" style="font-size:34px">Thandi, 20, the hungry student</h2>
+        <p class="muted">Second-year ICT student living in a student residence in Soshanguve, about 4 km from our kitchen, on a bursary allowance.</p>
+        <div class="facts">
+          <span class="tag">📍 Soshanguve · 4 km away</span>
+          <span class="tag">💰 Tight monthly budget</span>
+          <span class="tag">📱 Android, prepaid data</span>
+          <span class="tag">🍔 Orders about 8 times a month</span>
         </div>
-      </article>
+        <div class="grid grid-3">
+          <div><h3>Wants</h3><ul class="muted" style="padding-left:18px;margin:0"><li>A filling meal between lectures</li><li>Good value for money</li><li>Food delivered to her res</li></ul></div>
+          <div><h3>Frustrations</h3><ul class="muted" style="padding-left:18px;margin:0"><li>Taxi fare to the mall</li><li>Apps that don't deliver to her area</li><li>Surprise fees at checkout</li></ul></div>
+          <div><h3>How we help</h3><ul class="muted" style="padding-left:18px;margin:0"><li>Pies and rolls from R32</li><li>Exact delivery fee before paying</li><li>A 4 km Crunch Pass for R109</li></ul></div>
+        </div>
+        <p class="quote">"I just want proper food delivered to my res without spending my whole allowance on transport."</p>
+      </div>
+    </article>
+
+    <section class="section-tight">
+      <h2 style="font-size:34px">Why the Crunch Pass suits Thandi</h2>
+      <div class="card">
+        <p class="muted" style="margin:0">Thandi lives 4 km away, so each delivery costs 4 × R16 = <strong>R64</strong>. At about 8 orders a month that is <strong>R512</strong> in delivery fees.
+          A 4 km Crunch Pass costs R49 + R15 × 4 = <strong>R109</strong>, which saves her <strong>R403</strong> a month.</p>
+      </div>
     </section>
 
-    <section class="section">
-      <h2>Thandi's order, step by step</h2>
+    <section>
+      <h2 style="font-size:34px">Thandi's order, step by step</h2>
       <div class="grid grid-4">
-        <div class="card glass step"><span class="step-num">1</span><div><strong>Finds us</strong><span>Opens Kasi-Crunch on her phone after a late lecture.</span></div></div>
-        <div class="card glass step"><span class="step-num">2</span><div><strong>Chooses</strong><span>Asks Crunchy for a student deal and adds the Student Saver.</span></div></div>
-        <div class="card glass step"><span class="step-num">3</span><div><strong>Orders</strong><span>Sees the R25 delivery fee and pays cash on delivery.</span></div></div>
-        <div class="card glass step"><span class="step-num">4</span><div><strong>Comes back</strong><span>Joins the Crunch Club so delivery is free from then on.</span></div></div>
+        <div class="card"><div class="step-num">1</div><h3>Finds us</h3><p class="muted">Opens Kasi-Crunch on her phone after a late lecture.</p></div>
+        <div class="card"><div class="step-num">2</div><h3>Chooses</h3><p class="muted">Asks Crunchy for a budget meal and adds a pie and a roll.</p></div>
+        <div class="card"><div class="step-num">3</div><h3>Orders</h3><p class="muted">Enters 4 km, sees the R64 delivery fee and pays cash on arrival.</p></div>
+        <div class="card"><div class="step-num">4</div><h3>Saves</h3><p class="muted">Gets a 4 km Crunch Pass, so delivery is free all month.</p></div>
       </div>
     </section>
   </main>

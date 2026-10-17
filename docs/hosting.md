@@ -21,14 +21,14 @@ Instead of `config.properties`, set these on the host:
 |---|---|
 | `KASICRUNCH_DB_HOST` | `your-mysql-host.example.com` |
 | `KASICRUNCH_DB_PORT` | `3306` |
-| `KASICRUNCH_DB_NAME` | `kasicrunch` |
+| `KASICRUNCH_DB_NAME` | `kasi_crunch` |
 | `KASICRUNCH_DB_USER` | `kasicrunch_app` |
 | `KASICRUNCH_DB_PASSWORD` | *(secret)* |
 | `KASICRUNCH_SERVER_PORT` | `8080` (or the port your host gives you) |
 | `KASICRUNCH_ADMIN_EMAIL` | admin login created on first start |
 | `KASICRUNCH_ADMIN_PASSWORD` | *(choose a strong one before the first start)* |
 
-The database user needs permission to create the `kasicrunch` database and its
+The database user needs permission to create the `kasi_crunch` database and its
 tables the first time; after that, normal read/write access is enough.
 
 ## Option A: a Docker-based host (Railway, Render, Azure Container Apps, AWS App Runner)

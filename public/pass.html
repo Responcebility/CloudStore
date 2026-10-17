@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#cf343b">
+  <title>Crunch Pass | Kasi-Crunch</title>
+  <meta name="description" content="Free delivery for a month. You choose the distance; the distance sets the price.">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="pass">
+  <main id="main" class="container">
+    <section class="page-head">
+      <p class="eyebrow">Subscription</p>
+      <h1>Crunch <em>Pass.</em></h1>
+      <p class="lead">Free delivery for 30 days. You choose how far it reaches, and that distance sets your price for the month.</p>
+    </section>
+
+    <div id="current-pass" class="notice notice-success" hidden></div>
+
+    <section class="grid split" style="padding-bottom:30px">
+      <div class="pass-card">
+        <label for="km" class="muted" style="display:block">How far do you want free delivery?</label>
+        <div class="km-value"><span id="km-label">5</span> km</div>
+        <input id="km" type="range" min="1" max="20" step="1" value="5" aria-describedby="price-note">
+        <div class="range-labels"><span>1 km</span><span>20 km</span></div>
+        <div class="pass-price" id="price">R124<small> / month</small></div>
+        <p class="muted" id="price-note">R49 + R15 × <span id="km-inline">5</span> km</p>
+        <ul class="ticks">
+          <li>Free delivery on every order within <span id="km-tick">5</span> km</li>
+          <li>Further than that? You only pay R16 for each extra km</li>
+          <li>Lasts 30 days. Change your distance or cancel any time</li>
+        </ul>
+        <button class="button button-primary button-full" type="button" id="buy">Get my Crunch Pass</button>
+        <p class="muted small" style="margin:12px 0 0">Demo prototype: no money is charged.</p>
+      </div>
+
+      <div class="card">
+        <h3>Is it worth it?</h3>
+        <p class="muted">Without a pass, delivery costs R16 for every km. Compare what you'd pay in a month:</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Orders a month</th><th class="num">Without pass</th><th class="num">With pass</th></tr></thead>
+            <tbody id="compare"></tbody>
+          </table>
+        </div>
+        <p class="muted small" id="compare-note" style="margin-top:12px"></p>
+      </div>
+    </section>
+
+    <section class="section-tight">
+      <div class="grid grid-3">
+        <div class="card"><div class="card-icon">📍</div><h3>You choose the distance</h3><p class="muted">Live 3 km away? A 3 km pass is all you need. Far away? Pick up to 20 km.</p></div>
+        <div class="card"><div class="card-icon">🧮</div><h3>Fair, simple price</h3><p class="muted">R49 base plus R15 for every km of free delivery. No surprises.</p></div>
+        <div class="card"><div class="card-icon">🛍️</div><h3>Collect any time</h3><p class="muted">Collection is always free, with or without a pass.</p></div>
+      </div>
+    </section>
+  </main>
+  <script src="js/app.js"></script>
+  <script src="js/pass.js"></script>
+</body>
+</html>

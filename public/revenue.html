@@ -3,93 +3,97 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Revenue Model · Kasi-Crunch</title>
-  <meta name="description" content="How Kasi-Crunch makes money: food sales, club subscriptions and delivery fees, with a first-year projection.">
+  <meta name="theme-color" content="#cf343b">
+  <title>Revenue model | Kasi-Crunch</title>
+  <meta name="description" content="How Kasi-Crunch makes money: food sales, distance-based delivery fees and the Crunch Pass, with a first-year projection.">
   <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-page="revenue">
-  <main id="main" class="container">
-    <section class="page-hero glass">
-      <span class="eyebrow">Revenue model</span>
-      <h1>How Kasi-Crunch <span class="accent-text">makes money</span></h1>
-      <p class="lead">E-commerce food sales, monthly club subscriptions, and delivery fees that pay our local runners.</p>
+  <main id="main" class="container" style="padding-bottom:80px">
+    <section class="page-head">
+      <p class="eyebrow">Revenue model</p>
+      <h1>How Kasi-Crunch <em>makes money.</em></h1>
+      <p class="lead">One store, three income streams: e-commerce food sales, delivery fees by distance, and the Crunch Pass subscription.</p>
     </section>
 
-    <section class="section grid grid-3">
-      <div class="card glass"><div class="card-icon">🍗</div><h3>Food sales</h3><p class="muted">Every order earns the difference between the menu price and what the food costs to make.</p></div>
-      <div class="card glass"><div class="card-icon">⭐</div><h3>Club subscriptions</h3><p class="muted">Crunch Club (R49) and Family Club (R129) bring in steady income every month.</p></div>
-      <div class="card glass"><div class="card-icon">🚚</div><h3>Delivery fees</h3><p class="muted">R25 on orders up to R250 helps pay local delivery runners.</p></div>
-    </section>
+    <div class="grid grid-3">
+      <div class="card"><div class="card-icon">🍔</div><h3>Food sales</h3><p class="muted">Every order earns the menu price minus what the food costs to make (the gross profit).</p></div>
+      <div class="card"><div class="card-icon">🚗</div><h3>Delivery fees</h3><p class="muted">R16 per km, up to 30 km. This pays our local delivery runners. Collection is free.</p></div>
+      <div class="card"><div class="card-icon">✳</div><h3>Crunch Pass</h3><p class="muted">A monthly subscription for free delivery. The customer picks the distance, and the distance sets the price.</p></div>
+    </div>
 
-    <section class="section" id="clubs">
-      <div class="section-head"><div><h2>Join a club</h2><p class="muted">Log in, pick a club, and your benefits start on your next order. Cancel any time.</p></div></div>
-      <div class="grid grid-2" id="plan-grid"><div class="skeleton" style="min-height:260px"></div><div class="skeleton" style="min-height:260px"></div></div>
-    </section>
-
-    <section class="section grid grid-2">
-      <article class="card glass">
-        <h2>Our formulas</h2>
-        <div class="formula">discount    = subtotal × club discount (0% or 10%)
-delivery    = R0  if in a club or subtotal &gt; R250
-            = R25 otherwise
-orderTotal  = subtotal − discount + delivery
+    <section class="section-tight grid grid-2">
+      <article class="card">
+        <h2 style="font-size:30px">Our formulas</h2>
+        <div class="formula">deliveryFee = 0                                  (collection)
+            = (distance − pass km) × R16 per km   (delivery, never below R0)
+passPrice   = R49 + R15 × chosen km             (per month, 1–20 km)
+orderTotal  = food subtotal + deliveryFee
 grossProfit = food sales − food cost
 margin %    = grossProfit ÷ food sales × 100</div>
-        <p class="muted" style="margin-top:14px"><strong>Example:</strong> a 4-Piece Bucket (R89.90) costs R89.90 + R25 = <strong>R114.90</strong>.
-          A Family Club member pays R89.90 − R8.99 = <strong>R80.91</strong>, with free delivery.</p>
+        <p class="muted" style="margin-top:14px"><strong>Example:</strong> a Kasi Classic (R82) delivered 4.5 km costs R82 + 4.5 × R16 = <strong>R154</strong>.
+          With a 5 km Crunch Pass (R124 a month) the same order costs just <strong>R82</strong>.</p>
       </article>
-      <article class="card glass">
-        <h2>Sales by category</h2>
-        <p class="muted">Each category's share of all sales so far.</p>
-        <div class="chart-box"><canvas id="category-chart" aria-label="Share of sales by category"></canvas></div>
+      <article class="card">
+        <h2 style="font-size:30px">Crunch Pass prices</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Free delivery up to</th><th class="num">Price per month</th><th class="num">One delivery without it</th></tr></thead>
+          <tbody id="pass-table"></tbody>
+        </table></div>
       </article>
     </section>
 
-    <section class="section">
-      <div class="section-head"><div><h2>First-year projection</h2>
-        <p class="muted">Change the numbers to see cash flow, profit and cost-benefit for our first 12 months.</p></div></div>
+    <section class="card">
+      <h2 style="font-size:30px">Sales by category</h2>
+      <p class="muted">Each category's share of all food sales so far.</p>
+      <div class="chart-box"><canvas id="category-chart" aria-label="Share of sales by category"></canvas></div>
+    </section>
+
+    <section class="section-tight">
+      <div class="section-heading"><div><h2 style="font-size:36px">First-year <em>projection.</em></h2>
+        <p class="muted" style="margin:6px 0 0">Change the numbers to see cash flow, profit and cost-benefit for our first 12 months.</p></div></div>
       <div class="grid split">
         <div class="stack">
           <div class="grid grid-2">
-            <div class="stat glass"><div class="stat-label">Year income</div><div class="stat-value" id="p-revenue">–</div></div>
-            <div class="stat glass"><div class="stat-label">Year costs</div><div class="stat-value" id="p-costs">–</div></div>
-            <div class="stat glass"><div class="stat-label">Year profit</div><div class="stat-value" id="p-profit">–</div></div>
-            <div class="stat glass"><div class="stat-label">Break-even</div><div class="stat-value" id="p-breakeven">–</div></div>
+            <div class="stat"><div class="stat-label">Year income</div><div class="stat-value" id="p-income">–</div></div>
+            <div class="stat"><div class="stat-label">Year costs</div><div class="stat-value" id="p-costs">–</div></div>
+            <div class="stat"><div class="stat-label">Year profit</div><div class="stat-value" id="p-profit">–</div></div>
+            <div class="stat"><div class="stat-label">Break-even</div><div class="stat-value" id="p-breakeven">–</div></div>
           </div>
-          <div class="card glass"><div class="chart-box"><canvas id="projection-chart" aria-label="Monthly income, costs and cumulative cash flow"></canvas></div></div>
+          <div class="card"><div class="chart-box"><canvas id="projection-chart" aria-label="Monthly income, costs and cash to date"></canvas></div></div>
           <p class="muted" id="p-ratio"></p>
         </div>
-        <form class="card glass form-grid" id="projection-form" novalidate>
-          <h3>Assumptions</h3>
-          <div class="form-grid two">
+        <form class="card form-grid" id="projection-form" novalidate>
+          <h3 style="margin:0">Assumptions</h3>
+          <div class="form-row">
             <div class="field"><label for="ordersPerDay">Orders per day</label><input class="input" id="ordersPerDay" type="number" value="40"><span class="field-error"></span></div>
-            <div class="field"><label for="averageOrder">Average order (R)</label><input class="input" id="averageOrder" type="number" value="95"><span class="field-error"></span></div>
-            <div class="field"><label for="foodCost">Food cost (% of sales)</label><input class="input" id="foodCost" type="number" value="44"><span class="field-error"></span></div>
-            <div class="field"><label for="paidDelivery">Orders paying delivery (%)</label><input class="input" id="paidDelivery" type="number" value="70"><span class="field-error"></span></div>
-            <div class="field"><label for="clubMembers">Club members</label><input class="input" id="clubMembers" type="number" value="60"><span class="field-error"></span></div>
+            <div class="field"><label for="averageOrder">Average food order (R)</label><input class="input" id="averageOrder" type="number" value="110"><span class="field-error"></span></div>
+            <div class="field"><label for="foodCost">Food cost (% of sales)</label><input class="input" id="foodCost" type="number" value="42"><span class="field-error"></span></div>
+            <div class="field"><label for="deliveryShare">Orders delivered (%)</label><input class="input" id="deliveryShare" type="number" value="75"><span class="field-error"></span></div>
+            <div class="field"><label for="averageKm">Average distance (km)</label><input class="input" id="averageKm" type="number" step="0.5" value="4"><span class="field-error"></span></div>
+            <div class="field"><label for="passOrders">Deliveries by pass holders (%)</label><input class="input" id="passOrders" type="number" value="30"><span class="field-error"></span></div>
+            <div class="field"><label for="passMembers">Crunch Pass members</label><input class="input" id="passMembers" type="number" value="60"><span class="field-error"></span></div>
+            <div class="field"><label for="passKm">Average pass distance (km)</label><input class="input" id="passKm" type="number" value="5"><span class="field-error"></span></div>
             <div class="field"><label for="growth">Monthly growth (%)</label><input class="input" id="growth" type="number" step="0.5" value="5"><span class="field-error"></span></div>
-            <div class="field"><label for="runnerPay">Runner pay per delivery (R)</label><input class="input" id="runnerPay" type="number" value="15"><span class="field-error"></span></div>
-            <div class="field"><label for="fixedCosts">Fixed costs per month (R)</label><input class="input" id="fixedCosts" type="number" value="38000"><span class="field-error"></span>
-              <span class="hint">Rent, staff, gas, electricity, hosting</span></div>
-            <div class="field"><label for="startupCost">Start-up cost (R)</label><input class="input" id="startupCost" type="number" value="60000"><span class="field-error"></span>
-              <span class="hint">Fryers and kitchen equipment, month 1</span></div>
+            <div class="field"><label for="runnerPay">Runner pay per km (R)</label><input class="input" id="runnerPay" type="number" value="6"><span class="field-error"></span></div>
+            <div class="field"><label for="fixedCosts">Fixed costs per month (R)</label><input class="input" id="fixedCosts" type="number" value="38000"><small>Rent, staff, gas, electricity, hosting</small><span class="field-error"></span></div>
+            <div class="field"><label for="startupCost">Start-up cost (R)</label><input class="input" id="startupCost" type="number" value="60000"><small>Fryers and kitchen equipment, month 1</small><span class="field-error"></span></div>
           </div>
         </form>
       </div>
-      <details class="card glass" style="margin-top:20px">
+      <details class="card" style="margin-top:20px">
         <summary>Show the month-by-month table</summary>
         <div class="table-wrap" style="margin-top:12px"><table id="projection-table"><thead><tr>
-          <th>Month</th><th class="num">Orders</th><th class="num">Food profit</th><th class="num">Clubs</th><th class="num">Delivery</th>
+          <th>Month</th><th class="num">Orders</th><th class="num">Food profit</th><th class="num">Delivery fees</th><th class="num">Crunch Pass</th>
           <th class="num">Income</th><th class="num">Costs</th><th class="num">Profit / loss</th><th class="num">Cash to date</th>
         </tr></thead><tbody></tbody><tfoot></tfoot></table></div>
       </details>
     </section>
   </main>
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
   <script src="js/charts.js"></script>
   <script src="js/app.js"></script>

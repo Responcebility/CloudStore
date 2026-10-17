@@ -2,18 +2,18 @@
  * File:    charts.js
  * Author:  Kasi-Crunch group (JGA 2026)
  * Date:    2026-10-17
- * Purpose: Chart.js defaults in the red-and-orange theme, plus the shared
- *          colour palette used by every chart.
+ * Purpose: Chart.js defaults for the light Kasi-Crunch theme, plus the
+ *          shared red/orange palette used by every chart.
  */
 
-const CHART_COLORS = ["#f97316", "#dc2626", "#fdba74", "#b91c1c", "#fb923c", "#7f1d1d", "#ffedd5"];
+const CHART_COLORS = ["#cf343b", "#e8711c", "#171714", "#f2a65a", "#ad2832", "#8a857b", "#f6c9a0", "#5b5953"];
 
 if (window.Chart) {
-  Chart.defaults.color = "#fcd9bd";
-  Chart.defaults.borderColor = "rgba(253,186,116,0.15)";
-  Chart.defaults.font.family = '"Poppins", system-ui, sans-serif';
+  Chart.defaults.color = "#6b675f";
+  Chart.defaults.borderColor = "#e9e4d9";
+  Chart.defaults.font.family = '"DM Sans", system-ui, sans-serif';
   Chart.defaults.plugins.legend.labels.usePointStyle = true;
-  Chart.defaults.plugins.tooltip.backgroundColor = "rgba(69,10,10,0.95)";
+  Chart.defaults.plugins.tooltip.backgroundColor = "#171714";
   Chart.defaults.plugins.tooltip.padding = 12;
   Chart.defaults.maintainAspectRatio = false;
 }

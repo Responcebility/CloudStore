@@ -24,7 +24,7 @@ public final class AssistantHandler extends ApiHandler {
     private static final Set<String> STOP_WORDS = Set.of(
             "the", "and", "for", "you", "have", "any", "can", "buy", "want", "need", "looking", "some", "with",
             "what", "where", "how", "much", "does", "cost", "price", "please", "show", "find", "get", "sell", "selling",
-            "items", "menu", "food", "something", "cheap", "best", "good", "your", "there", "are", "order", "give");
+            "items", "menu", "food", "something", "cheap", "best", "good", "your", "there", "are", "order", "give", "crunch", "kasi");
 
     @Override
     protected void route(HttpExchange exchange, String method, String path) throws Exception {
@@ -46,40 +46,41 @@ public final class AssistantHandler extends ApiHandler {
         if (matches(message, "track", "my order", "order status", "where is my", "latest order")) {
             return orderStatus(exchange, connection);
         }
-        if (matches(message, "deliver", "delivery", "courier")) {
-            return reply(String.format("Delivery is R%.0f, and free when your order is over R%.0f. "
-                    + "Crunch Club and Family Club members get free delivery on every order.",
-                    Pricing.DELIVERY_FEE, Pricing.FREE_DELIVERY_THRESHOLD));
+        if (matches(message, "pass", "subscribe", "subscription", "membership", "free delivery")) {
+            return reply(String.format("The Crunch Pass gives you free delivery for a month. You choose how far (1-%d km) and the price "
+                    + "is R%.0f + R%.0f per km, so a 5 km pass is R%.0f. Set yours on the Crunch Pass page.",
+                    Pricing.PASS_MAX_KM, Pricing.PASS_BASE_PRICE, Pricing.PASS_RATE_PER_KM, Pricing.passPrice(5)));
         }
-        if (matches(message, "club", "membership", "subscribe", "subscription", "discount")) {
-            return reply("Crunch Club (R49 a month) gives you free delivery on every order. "
-                    + "Family Club (R129 a month) adds 10% off every order. See the Revenue Model page to join.");
+        if (matches(message, "deliver", "delivery", "courier", "collect", "collection", "pick up", "pickup")) {
+            return reply(String.format("Delivery is R%.0f per km, up to %.0f km away. Collection is always free. "
+                    + "With a Crunch Pass, delivery is free within your chosen distance.",
+                    Pricing.DELIVERY_RATE_PER_KM, Pricing.MAX_DELIVERY_KM));
         }
         if (matches(message, "spicy", "hot", "fire", "peri")) {
-            List<Map<String, Object>> spicy = spicyItems(connection);
+            List<Map<String, Object>> spicy = ProductHandler.where(connection, "spicy = 1", 3);
             Map<String, Object> result = reply("Feeling brave? These ones bring the heat 🌶️:");
             result.put("products", spicy);
             return result;
         }
         if (matches(message, "popular", "best seller", "bestseller", "recommend", "favourite", "favorite")) {
             Map<String, Object> result = reply("Our customers love these:");
-            result.put("products", ProductHandler.search(connection, "", 3));
+            result.put("products", ProductHandler.where(connection, "popular = 1", 3));
             return result;
         }
-        if (matches(message, "cheap", "budget", "student", "saver", "broke")) {
-            Map<String, Object> result = reply("On a budget? The Student Saver combo is the best value:");
-            result.put("products", ProductHandler.search(connection, "Saver", 1));
+        if (matches(message, "cheap", "budget", "student", "saver", "broke", "deal")) {
+            Map<String, Object> result = reply("On a budget? These are filling and easy on the pocket:");
+            result.put("products", ProductHandler.where(connection, "category IN ('Pies','Chicken','Rolls') AND price < 70", 3));
             return result;
         }
         if (matches(message, "pay", "payment", "card", "cash")) {
-            return reply("You can pay cash or by card when your order is delivered. Online payments are coming next.");
+            return reply("You can pay cash or by card when your order arrives or when you collect it. Online payments are coming next.");
         }
         if (matches(message, "contact", "help", "support", "email", "complain")) {
             return reply("You can reach the Kasi-Crunch team on the Contact page. We reply within two working days.");
         }
         if (matches(message, "who are you", "what is kasi", "about kasi")) {
-            return reply("Kasi-Crunch is a township fried-chicken brand: crunch outside, juicy inside. "
-                    + "Order online and we deliver around Soshanguve and nearby.");
+            return reply("Kasi-Crunch is our own kasi kitchen: crunch outside, juicy inside. "
+                    + "Order online for delivery or collection around Soshanguve.");
         }
 
         // Otherwise treat the question as a menu search.
@@ -93,14 +94,7 @@ public final class AssistantHandler extends ApiHandler {
                 return result;
             }
         }
-        return reply("Eish, I didn't catch that. Try \"wings\", \"kota\", \"something spicy\", \"delivery\" or \"track my order\".");
-    }
-
-    private List<Map<String, Object>> spicyItems(Connection connection) throws Exception {
-        try (PreparedStatement statement = connection.prepareStatement(
-                "SELECT id, name, description, category, price, stock, emoji, popular, spicy FROM products WHERE spicy = 1 ORDER BY price LIMIT 3")) {
-            return ProductHandler.readProducts(statement);
-        }
+        return reply("Eish, I didn't catch that. Try \"wings\", \"burger\", \"something spicy\", \"crunch pass\" or \"track my order\".");
     }
 
     private Map<String, Object> orderStatus(HttpExchange exchange, Connection connection) throws Exception {
@@ -113,7 +107,7 @@ public final class AssistantHandler extends ApiHandler {
             query.setLong(1, user.id());
             try (ResultSet row = query.executeQuery()) {
                 if (!row.next()) {
-                    return reply("You haven't ordered yet. Have a look at the menu — the 2-Piece Crunch is a great start!");
+                    return reply("You haven't ordered yet. Have a look at the menu: the Kasi Classic is a great start!");
                 }
                 return reply(String.format("Your latest order #%d (R%.2f) is: %s.", row.getLong(1), row.getDouble(3), row.getString(2)));
             }

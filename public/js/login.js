@@ -2,7 +2,7 @@
  * File:    login.js
  * Author:  Kasi-Crunch group (JGA 2026)
  * Date:    2026-10-17
- * Purpose: Log in and registration forms, with friendly validation.
+ * Purpose: Sign-in and registration forms, with friendly validation.
  */
 
 (() => {
@@ -37,10 +37,10 @@
     button.disabled = true;
     try {
       const { user } = await KC.api(path, { method: "POST", data });
-      KC.toast(`Welcome, ${user.fullName.split(" ")[0]}! 🍗`);
+      KC.toast(`Welcome, ${user.fullName.split(" ")[0]}!`);
       setTimeout(() => location.replace(destination(user)), 500);
     } catch (error) {
-      result.innerHTML = `<div class="alert alert-error">${KC.escapeHtml(error.message)}</div>`;
+      result.innerHTML = `<div class="notice notice-error">${KC.escapeHtml(error.message)}</div>`;
       button.disabled = false;
     }
   }
@@ -61,7 +61,7 @@
     const password = document.getElementById("reg-password");
     const confirm = document.getElementById("reg-confirm");
     const strong = password.value.length >= 8 && /[a-z]/i.test(password.value) && /\d/.test(password.value);
-    let ok = showFieldError(name, name.value.trim().length >= 2 ? "" : "Please enter your full name.");
+    let ok = showFieldError(name, name.value.trim().length >= 2 ? "" : "Please enter your name.");
     ok = showFieldError(email, EMAIL.test(email.value.trim()) ? "" : "Please enter a valid email address, for example name@example.com.") && ok;
     ok = showFieldError(password, strong ? "" : "Please use at least 8 characters with a letter and a number.") && ok;
     ok = showFieldError(confirm, confirm.value && confirm.value === password.value ? "" : "The passwords do not match.") && ok;

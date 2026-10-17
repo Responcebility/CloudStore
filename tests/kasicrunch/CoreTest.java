@@ -17,18 +17,25 @@ public final class CoreTest {
     private static int failed = 0;
 
     public static void main(String[] args) {
-        // Pricing: delivery is R25, free strictly above R250 or for club members.
-        check("delivery on R249.99", Pricing.deliveryFee(249.99, false) == 25.0);
-        check("delivery on exactly R250", Pricing.deliveryFee(250.00, false) == 25.0);
-        check("free delivery on R250.01", Pricing.deliveryFee(250.01, false) == 0.0);
-        check("free delivery for club members", Pricing.deliveryFee(40, true) == 0.0);
-        check("10% club discount on R120", Pricing.discount(120, 0.10) == 12.0);
-        check("no discount for non-members", Pricing.discount(120, 0.0) == 0.0);
-        check("order total: R89.90 + R25 delivery", Pricing.orderTotal(89.90, 0, 25) == 114.9);
-        check("order total with discount", Pricing.orderTotal(120, 12, 0) == 108.0);
+        // Pricing: delivery is R16 per km; a Crunch Pass covers its chosen distance.
+        check("4.5 km without a pass costs R72", Pricing.deliveryFee(4.5, 0) == 72.0);
+        check("0.1 km without a pass costs R1.60", Pricing.deliveryFee(0.1, 0) == 1.6);
+        check("4.5 km with a 5 km pass is free", Pricing.deliveryFee(4.5, 5) == 0.0);
+        check("exactly 5 km with a 5 km pass is free", Pricing.deliveryFee(5, 5) == 0.0);
+        check("7 km with a 5 km pass pays 2 km (R32)", Pricing.deliveryFee(7, 5) == 32.0);
+        check("pass price for 1 km is R64", Pricing.passPrice(1) == 64.0);
+        check("pass price for 5 km is R124", Pricing.passPrice(5) == 124.0);
+        check("pass price for 20 km is R349", Pricing.passPrice(20) == 349.0);
+        check("order total adds delivery", Pricing.orderTotal(82, 72) == 154.0);
         check("gross profit", Pricing.grossProfit(100, 42.5) == 57.5);
         check("gross margin %", Pricing.marginPercent(200, 90) == 55.0);
         check("rounds to cents", Pricing.round2(19.999) == 20.0 && Pricing.round2(3.141) == 3.14);
+
+        // Distance input.
+        check("accepts 4.5 km", Validator.decimalInRange("4.5", "delivery distance", 0.1, 30, "km") == 4.5);
+        rejects("rejects 0 km", () -> Validator.decimalInRange("0", "delivery distance", 0.1, 30, "km"));
+        rejects("rejects 31 km", () -> Validator.decimalInRange("31", "delivery distance", 0.1, 30, "km"));
+        rejects("rejects km as letters", () -> Validator.decimalInRange("far", "delivery distance", 0.1, 30, "km"));
 
         // Statistics.
         List<Double> values = List.of(100.0, 250.0, 50.0, 400.0);

@@ -9,19 +9,19 @@ adjust the wording to your group's own voice.
 
 ## Research title
 
-**An online ordering platform for a township fried-chicken business in Tshwane: A prototype investigation.**
+**An online ordering platform for a township fast-food business in Tshwane: A prototype investigation.**
 
 ## Aim
 
-To design, build and host a working online ordering prototype for a township fried-chicken business.
+To design, build and host a working online ordering prototype for a township fast-food business.
 
 ## Objectives
 
 1. Study at least five similar food businesses and identify the gap Kasi-Crunch fills.
-2. Build a hosted website where customers can browse the menu and place delivery orders.
-3. Calculate totals, club discounts and delivery fees correctly for every order.
-4. Offer a subscription (club) revenue model alongside food sales.
-5. Summarise sales and profit with statistics and charts on an admin dashboard.
+2. Build a hosted website where customers can browse the menu and order for delivery or collection.
+3. Calculate distance-based delivery fees and Crunch Pass prices correctly.
+4. Offer a subscription (the Crunch Pass) alongside food sales.
+5. Summarise sales, profit and delivery data with statistics and charts on an admin dashboard.
 
 ---
 
@@ -32,7 +32,7 @@ To design, build and host a working online ordering prototype for a township fri
 | Programming language (server) | Java 19, using the JDK's built-in HTTP server | Applies the Java skills from the Programming module; no framework to learn |
 | Database | MySQL 8, via JDBC (MySQL Connector/J 8.4.0) | Reliable relational database for customers, menu and orders |
 | Front end | HTML5, CSS3, JavaScript | Runs in any browser, including phones |
-| Design | Red-and-orange monochrome theme, frosted-glass panels, a free Unsplash background photo | A clear, friendly brand that is easy to use |
+| Design | Light paper theme with red and orange accents (based on the group's JGA-Project styling), Unsplash food photos | A clear, friendly look that is easy to use |
 | Charts | Chart.js 4 | Line, bar, pie and doughnut charts |
 | Assistant | Crunchy, a rule-based (no-code style) assistant | Instant answers and menu suggestions without a paid AI service |
 | Collaboration and version control | GitHub repository | Shared code and a full history of changes |
@@ -44,15 +44,15 @@ To design, build and host a working online ordering prototype for a township fri
 |---|---|
 | `Main.java` | Starts the database and web server, registers the API routes |
 | `Config.java` | Reads `config.properties` and environment variables |
-| `Database.java` | Creates the tables; seeds the menu, clubs and demo orders |
+| `Database.java` | Creates the tables; seeds the menu, demo orders and passes |
 | `Pricing.java` | Business parameters and money formulas |
 | `Statistics.java` | Mean, median, range, percentages and conversions |
 | `Validator.java` | Checks every input and returns polite error messages |
 | `PasswordHasher.java` | PBKDF2 password hashing and session tokens |
-| `Auth.java`, `AuthHandler.java` | Sessions, club look-up, register, log in, log out |
+| `Auth.java`, `AuthHandler.java` | Sessions, Crunch Pass look-up, register, log in, log out |
 | `ProductHandler.java` | Menu, search, categories, adding items |
-| `OrderHandler.java` | Checkout and order history |
-| `PlanHandler.java` | Joining, switching and cancelling clubs |
+| `OrderHandler.java` | Checkout (delivery or collection) and order history |
+| `PassHandler.java` | Crunch Pass quotes, buying, changing and cancelling |
 | `AdminHandler.java` | Dashboard statistics, order status, messages |
 | `InsightsHandler.java` | Public pricing parameters and sales share |
 | `AssistantHandler.java` | Crunchy |
@@ -88,7 +88,7 @@ between the browser and the server.
 - **SQL injection:** every query uses parameterised `PreparedStatement`s.
 - **Cross-site scripting:** user content is inserted as text or escaped, and
   the JSON writer escapes `<` and `>`.
-- **Server-side pricing:** prices, discounts and delivery fees are recalculated
+- **Server-side pricing:** prices, delivery fees and pass prices are recalculated
   on the server, so a tampered cart cannot change what is charged.
 - **Roles:** admin-only actions are checked on the server.
 - **Path traversal:** the file server refuses paths outside the `public` folder.
@@ -102,9 +102,9 @@ between the browser and the server.
 
 ## Testing
 
-`test.ps1` / `test.sh` runs 42 automatic checks on the formulas (delivery
-threshold, club discount, gross profit and margin), statistics, validation and
-cart parsing. They include deliberately bad input such as letters, negative
+`test.ps1` / `test.sh` runs 47 automatic checks on the formulas (delivery per
+km, Crunch Pass price and coverage, gross profit and margin), statistics,
+validation (including distances of 0 and 31 km) and basket parsing. They include deliberately bad input such as letters, negative
 numbers, zero, decimals, huge numbers, empty values and tampered cart text.
 
 Manual test plan (run through every option, then again with bad input):
@@ -114,9 +114,9 @@ Manual test plan (run through every option, then again with bad input):
 | Register | Short password, invalid email, mismatched passwords, existing email | Polite message under the field; no account created |
 | Log in | Wrong password | "That email and password do not match our records." |
 | Menu search | 61+ characters, nonsense words | Length message / "Nothing matches that" |
-| Your order | Press + beyond stock or 20 | "You can order at most …" |
-| Checkout | Logged out, empty address, phone "123" | Login prompt / field messages |
-| Clubs | Join the same club twice | "You are already in the …" |
+| Basket | Press + beyond stock or 20 | "You can order at most …" |
+| Checkout | Signed out, empty address, distance 0 or 45 km, phone "123" | Sign-in prompt / field messages |
+| Crunch Pass | Buy the same distance twice; ask for 25 km | "You already have…" / distance message |
 | Contact | 3-character message | "Please write a message of at least 10 characters." |
 | Add menu item (admin) | Price "abc", cost higher than price, stock −1 | Field messages |
 | Dashboard | Open `dashboard.html` as a customer | Redirected to log in |
@@ -156,24 +156,26 @@ Manual test plan (run through every option, then again with bad input):
 > delivery apps don't always reach kasi streets. Students like Thandi end up
 > spending their allowance on transport just to eat.
 >
-> **Solution:** Kasi-Crunch: crunch outside, juicy inside. A township
-> fried-chicken brand with its own online ordering. You pick from the menu,
-> see the delivery fee before you pay, and pay cash or card when local runners
-> bring your food.
+> **Solution:** Kasi-Crunch: crunch outside, juicy inside. Our own kasi
+> kitchen with simple online ordering, like a McDonald's app. You pick from the
+> menu, choose delivery (R16 per km) or free collection, see the exact fee
+> before you pay, and pay cash or card on arrival.
 >
 > **Who it's for:** Students, families and workers in Soshanguve and nearby.
 >
-> **How it makes money:** food sales, Crunch Club and Family Club
-> subscriptions for steady monthly income, and delivery fees that pay local runners.
+> **How it makes money:** food sales, delivery fees that pay local runners,
+> and the Crunch Pass: you choose how far free delivery reaches, and that
+> distance sets your monthly price.
 >
-> **How AI makes it better:** Crunchy already answers questions and suggests
-> spicy or budget meals instantly. Next, an AI assistant will recommend meals
+> **How AI makes it better:** Crunchy already answers questions, explains the
+> Crunch Pass and suggests spicy or budget meals instantly. Next, an AI assistant will recommend meals
 > and chat in local languages, and automation will send WhatsApp updates.
 
 **Demo order for the presentation:** Home (slogan and pitch) → Menu (search
-"wings", filter Combos) → add items → Your order (free-delivery bar) →
-Checkout → My Account (order status) → Revenue Model (clubs and projection) →
-Dashboard as admin (statistics, margins and charts).
+"wings", filter Meal Combos) → add items → Basket (delivery 4.5 km = R72, then
+collection = free) → Checkout → Crunch Pass (slide to 5 km = R124) → place
+the same order again (delivery now free) → My account → Revenue model
+(projection) → Dashboard as admin (statistics, distances and charts).
 
 ---
 
@@ -181,9 +183,9 @@ Dashboard as admin (statistics, margins and charts).
 
 - Home page with the slogan and elevator pitch
 - Menu with a search and a category filter
-- Your order, showing the delivery fee and the free-delivery progress bar
+- Basket, showing the delivery fee for a distance and the collection option
 - Order confirmation and My Account order history
-- Revenue Model clubs and the first-year projection chart
+- Crunch Pass slider and price, and the Revenue model projection chart
 - Customer Persona and Research pages
 - Admin dashboard statistics and charts
 - Crunchy answering a question

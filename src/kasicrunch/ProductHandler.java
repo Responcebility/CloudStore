@@ -21,10 +21,20 @@ import java.util.Map;
 public final class ProductHandler extends ApiHandler {
 
     /** Parameter: the menu categories, in the order they are shown. */
-    public static final String[] CATEGORIES = {"Chicken", "Burgers & Wraps", "Kasi Specials", "Combos", "Sides", "Drinks", "Desserts"};
+    public static final String[] CATEGORIES = {"Burgers", "Meal Combos", "Chicken", "Sides", "Pies", "Rolls", "Ice Cream", "Drinks"};
+
+    /** Photos admins can pick for a new item (files in public/img/menu). */
+    public static final String[] IMAGES = {
+        "photo-1568901346375-23c9450c58cd", "photo-1572802419224-296b0aeee0d9", "photo-1606755962773-d324e0a13086",
+        "photo-1626082927389-6cd097cdc6ec", "photo-1527477396000-e27163b481c2", "photo-1573080496219-bb080dd4f877",
+        "photo-1667499989723-c4ab9549d63c", "photo-1788240260780-fc3b79c05b75", "photo-1539252554453-80ab65ce3586",
+        "photo-1560008581-09826d1de69e", "photo-1572490122747-3968b75cc699", "photo-1513558003720-343f3a99d97b",
+        "photo-1629654613528-5d0a2e4166de", "photo-1548839140-29a749e1cf4d"};
 
     private static final String PRODUCT_SELECT =
-            "SELECT id, name, description, category, price, stock, emoji, popular, spicy FROM products";
+            "SELECT id, name, description, category, price, stock, image, popular, spicy FROM products";
+    private static final String MENU_ORDER =
+            " ORDER BY FIELD(category, 'Burgers','Meal Combos','Chicken','Sides','Pies','Rolls','Ice Cream','Drinks'), price";
 
     @Override
     protected void route(HttpExchange exchange, String method, String path) throws Exception {
@@ -58,8 +68,7 @@ public final class ProductHandler extends ApiHandler {
         if ("1".equals(query.get("popular"))) {
             sql.append(" AND popular = 1");
         }
-        // Menu order: by category as listed above, then cheapest first.
-        sql.append(" ORDER BY FIELD(category, 'Chicken','Burgers & Wraps','Kasi Specials','Combos','Sides','Drinks','Desserts'), price");
+        sql.append(MENU_ORDER);
 
         try (Connection connection = Database.connect(); PreparedStatement statement = connection.prepareStatement(sql.toString())) {
             for (int i = 0; i < params.size(); i++) {
@@ -80,7 +89,7 @@ public final class ProductHandler extends ApiHandler {
                         "category", row.getString(4),
                         "price", row.getDouble(5),
                         "stock", row.getInt(6),
-                        "emoji", row.getString(7),
+                        "image", "img/menu/" + row.getString(7) + ".jpg",
                         "popular", row.getBoolean(8),
                         "spicy", row.getBoolean(9)));
             }
@@ -97,6 +106,12 @@ public final class ProductHandler extends ApiHandler {
         }
     }
 
+    public static List<Map<String, Object>> where(Connection connection, String condition, int limit) throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement(PRODUCT_SELECT + " WHERE " + condition + " ORDER BY price LIMIT " + limit)) {
+            return readProducts(statement);
+        }
+    }
+
     private void create(HttpExchange exchange) throws Exception {
         Auth.requireAdmin(exchange);
         Map<String, String> form = Http.body(exchange);
@@ -109,11 +124,10 @@ public final class ProductHandler extends ApiHandler {
             throw ApiException.badRequest("The food cost must be lower than the selling price, otherwise every sale makes a loss.");
         }
         int stock = Validator.intInRange(form.get("stock"), "daily stock", 0, 10_000);
-        String emoji = form.getOrDefault("emoji", "").trim();
-        if (emoji.isEmpty() || emoji.length() > 8) emoji = "🍗";
+        String image = Validator.oneOf(form, "image", "photo", IMAGES);
         boolean spicy = "1".equals(form.get("spicy"));
 
-        String sql = "INSERT INTO products (name, description, category, price, cost, stock, emoji, spicy) VALUES (?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO products (name, description, category, price, cost, stock, image, spicy) VALUES (?,?,?,?,?,?,?,?)";
         try (Connection connection = Database.connect();
              PreparedStatement insert = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             insert.setString(1, name);
@@ -122,7 +136,7 @@ public final class ProductHandler extends ApiHandler {
             insert.setDouble(4, price);
             insert.setDouble(5, cost);
             insert.setInt(6, stock);
-            insert.setString(7, emoji);
+            insert.setString(7, image);
             insert.setBoolean(8, spicy);
             insert.executeUpdate();
             Http.json(exchange, 201, Json.map("id", Database.generatedId(insert), "message", name + " was added to the menu."));

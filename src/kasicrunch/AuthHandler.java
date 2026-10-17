@@ -86,8 +86,8 @@ public final class AuthHandler extends ApiHandler {
         }
         try (Connection connection = Database.connect()) {
             Map<String, Object> json = user.toJson();
-            Auth.Club club = Auth.activeClub(connection, user.id());
-            json.put("club", club == null ? null : club.toJson());
+            Auth.Pass pass = Auth.activePass(connection, user.id());
+            json.put("pass", pass == null ? null : pass.toJson());
             Http.json(exchange, 200, Json.map("user", json));
         }
     }

@@ -35,9 +35,7 @@ public final class Main {
         server.createContext("/api/auth", new AuthHandler());
         server.createContext("/api/products", new ProductHandler());
         server.createContext("/api/orders", new OrderHandler());
-        PlanHandler plans = new PlanHandler();
-        server.createContext("/api/plans", plans);
-        server.createContext("/api/subscriptions", plans);
+        server.createContext("/api/pass", new PassHandler());
         server.createContext("/api/contact", new ContactHandler());
         InsightsHandler insights = new InsightsHandler();
         server.createContext("/api/pricing", insights);

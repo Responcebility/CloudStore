@@ -3,30 +3,33 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>My Account · Kasi-Crunch</title>
-  <meta name="description" content="Your Kasi-Crunch orders and club.">
+  <meta name="theme-color" content="#cf343b">
+  <title>My account | Kasi-Crunch</title>
+  <meta name="description" content="Your Kasi-Crunch orders and Crunch Pass.">
   <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-page="account">
-  <main id="main" class="container">
-    <section class="page-hero glass row space-between">
+  <main id="main" class="container" style="padding-bottom:80px">
+    <section class="page-head row between">
       <div>
-        <h1 id="greeting" style="margin-bottom:4px">My account</h1>
-        <p class="muted" id="account-email" style="margin:0"></p>
+        <p class="eyebrow">My account</p>
+        <h1 id="greeting" style="font-size:clamp(36px,5vw,56px)">Hi there</h1>
+        <p class="muted" id="email" style="margin:0"></p>
       </div>
-      <a class="btn btn-primary btn-lg" href="menu.html">Order again</a>
+      <div class="row">
+        <a class="button button-primary" href="menu.html">Order again ↗</a>
+        <button class="button button-outline" type="button" id="logout">Sign out</button>
+      </div>
     </section>
 
-    <section class="section card glass" id="club"><p class="muted">Loading…</p></section>
+    <section class="card" id="pass-box" style="margin-bottom:28px"><p class="muted">Loading…</p></section>
 
-    <section class="section">
-      <h2>My orders</h2>
-      <div id="orders" class="stack"><div class="skeleton" style="min-height:120px"></div></div>
-    </section>
+    <h2 style="font-size:32px">Your recent orders</h2>
+    <div id="orders" class="stack"><div class="loading-card">Loading your orders…</div></div>
   </main>
   <script src="js/app.js"></script>
   <script src="js/account.js"></script>

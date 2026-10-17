@@ -3,68 +3,81 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>About · Kasi-Crunch</title>
-  <meta name="description" content="The problem Kasi-Crunch solves, who it serves, and how the prototype was built.">
+  <meta name="theme-color" content="#cf343b">
+  <title>Our story | Kasi-Crunch</title>
+  <meta name="description" content="The problem Kasi-Crunch solves, our aim and objectives, and how the prototype was built.">
   <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-page="about">
-  <main id="main" class="container">
-    <section class="page-hero glass">
-      <span class="eyebrow">About us</span>
-      <h1>Kasi food, <span class="accent-text">done right</span></h1>
-      <p class="lead">An online fried-chicken brand for Tshwane's townships: a prototype investigation.</p>
+  <main id="main">
+    <section class="container page-head">
+      <p class="eyebrow">About us</p>
+      <h1>Good food. <em>Good people.</em></h1>
+      <p class="lead">Kasi-Crunch is one kitchen, our own, serving Soshanguve and nearby. An online ordering platform for a township fast-food business: a prototype investigation.</p>
     </section>
 
-    <section class="section grid grid-2">
-      <article class="card glass">
-        <div class="card-icon">😩</div>
-        <h2>The problem we solve</h2>
-        <p class="muted">In townships like Soshanguve, students, families and workers who want a quick, hot meal often have to take a taxi
-          to a mall food court, or rely on delivery apps that don't always reach their streets. At the same time, kasi cooks make
-          excellent food but can only sell to people who walk past. Kasi-Crunch fixes this with a local fried-chicken brand you order
-          online, cooked in the kasi and delivered by local runners, so customers save time and money and the income stays in the community.</p>
+    <section class="container grid grid-2" style="padding-bottom:40px">
+      <article class="card">
+        <h2 style="font-size:30px">The problem we solve</h2>
+        <p class="muted">In townships like Soshanguve, students, families and workers who want a quick, hot meal often have to take a taxi to a
+          mall food court, or rely on delivery apps that don't always reach their streets. Kasi-Crunch fixes this with our own kasi kitchen and
+          simple online ordering: customers choose delivery, priced fairly by distance, or free collection. Regulars can buy a Crunch Pass for
+          free delivery all month. Customers save time and money, and the income and jobs stay in the community.</p>
       </article>
-      <article class="card glass">
-        <div class="card-icon">🎯</div>
-        <h2>Aim &amp; objectives</h2>
-        <p><strong>Aim:</strong> <span class="muted">To design, build and host a working online ordering prototype for a township fried-chicken business.</span></p>
+      <article class="card">
+        <h2 style="font-size:30px">Aim &amp; objectives</h2>
+        <p><strong>Aim:</strong> <span class="muted">To design, build and host a working online ordering prototype for a township fast-food business.</span></p>
         <ol class="muted" style="padding-left:20px;margin:0">
           <li>Study at least five similar food businesses and find the gap Kasi-Crunch fills.</li>
-          <li>Build a hosted website where customers can browse the menu and place delivery orders.</li>
-          <li>Calculate totals, club discounts and delivery fees correctly for every order.</li>
-          <li>Offer a subscription (club) revenue model alongside food sales.</li>
-          <li>Summarise sales and profit with statistics and charts on an admin dashboard.</li>
+          <li>Build a hosted website where customers can browse the menu and order for delivery or collection.</li>
+          <li>Calculate distance-based delivery fees and Crunch Pass prices correctly.</li>
+          <li>Offer a subscription (the Crunch Pass) alongside food sales.</li>
+          <li>Summarise sales, profit and delivery data with statistics and charts on an admin dashboard.</li>
         </ol>
       </article>
     </section>
 
-    <section class="section grid grid-3">
-      <div class="card glass"><div class="card-icon">💼</div><h3>Local jobs</h3>
-        <p class="muted">Every order supports cooks in the kitchen and a delivery runner from the area, which matters where youth unemployment is high.</p></div>
-      <div class="card glass"><div class="card-icon">🔁</div><h3>Money stays local</h3>
-        <p class="muted">Spending stays in the township instead of going to malls far away.</p></div>
-      <div class="card glass"><div class="card-icon">📱</div><h3>Digital skills</h3>
-        <p class="muted">Running an online food business builds digital and business skills in the community.</p></div>
+    <section class="story">
+      <div class="story-photo"><img src="img/menu/photo-1626082927389-6cd097cdc6ec.jpg" alt="Crispy fried chicken pieces"></div>
+      <div class="story-copy">
+        <p class="eyebrow">Why it matters</p>
+        <h2>Kasi food, <em>kasi jobs.</em></h2>
+        <p><strong>Local jobs:</strong> every order supports our cooks and a delivery runner from the area, which matters where youth unemployment is high.</p>
+        <p><strong>Money stays local:</strong> spending stays in the township instead of going to malls far away.</p>
+        <p><strong>Digital skills:</strong> running an online business builds digital and business skills in the community.</p>
+      </div>
     </section>
 
-    <section class="section card glass">
-      <h2>How we built it</h2>
-      <div class="table-wrap">
-        <table>
-          <tbody>
-            <tr><th>Back end</th><td>Java 19 (built-in HTTP server) with JDBC</td></tr>
-            <tr><th>Database</th><td>MySQL 8: customers, menu, orders, clubs and messages</td></tr>
-            <tr><th>Front end</th><td>HTML, CSS and JavaScript, with a red-and-orange glass design</td></tr>
-            <tr><th>Charts</th><td>Chart.js on the dashboard and the Revenue Model page</td></tr>
-            <tr><th>Assistant</th><td>Crunchy, a rule-based (no-code style) ordering assistant</td></tr>
-            <tr><th>Security</th><td>Hashed passwords (PBKDF2), secure session cookies, safe database queries</td></tr>
-            <tr><th>Teamwork</th><td>GitHub for shared code and version history</td></tr>
-          </tbody>
-        </table>
+    <section class="container section">
+      <div class="grid grid-2">
+        <article class="card">
+          <h2 style="font-size:30px">How we built it</h2>
+          <div class="table-wrap">
+            <table>
+              <tbody>
+                <tr><th>Back end</th><td>Java 19 (built-in HTTP server) with JDBC</td></tr>
+                <tr><th>Database</th><td>MySQL 8: customers, menu, orders, Crunch Passes, messages</td></tr>
+                <tr><th>Front end</th><td>HTML, CSS and JavaScript</td></tr>
+                <tr><th>Charts</th><td>Chart.js on the dashboard and the Revenue Model page</td></tr>
+                <tr><th>Assistant</th><td>Crunchy, a rule-based (no-code style) ordering assistant</td></tr>
+                <tr><th>Security</th><td>Hashed passwords, secure session cookies, safe database queries</td></tr>
+                <tr><th>Teamwork</th><td>GitHub for shared code and version history</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+        <article class="card">
+          <h2 style="font-size:30px">More about the project</h2>
+          <div class="stack">
+            <a class="button button-outline button-full" href="persona.html">Customer persona ↗</a>
+            <a class="button button-outline button-full" href="revenue.html">Revenue model &amp; projection ↗</a>
+            <a class="button button-outline button-full" href="research.html">Market research &amp; sources ↗</a>
+          </div>
+        </article>
       </div>
     </section>
   </main>

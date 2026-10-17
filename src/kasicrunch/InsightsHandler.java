@@ -22,8 +22,13 @@ public final class InsightsHandler extends ApiHandler {
     protected void route(HttpExchange exchange, String method, String path) throws Exception {
         switch (method + " " + path) {
             case "GET /api/pricing" -> Http.json(exchange, 200, Json.map(
-                    "deliveryFee", Pricing.DELIVERY_FEE,
-                    "freeDeliveryThreshold", Pricing.FREE_DELIVERY_THRESHOLD,
+                    "deliveryRatePerKm", Pricing.DELIVERY_RATE_PER_KM,
+                    "maxDeliveryKm", Pricing.MAX_DELIVERY_KM,
+                    "passBasePrice", Pricing.PASS_BASE_PRICE,
+                    "passRatePerKm", Pricing.PASS_RATE_PER_KM,
+                    "passMinKm", Pricing.PASS_MIN_KM,
+                    "passMaxKm", Pricing.PASS_MAX_KM,
+                    "passDays", Pricing.PASS_DAYS,
                     "maxQuantityPerItem", Pricing.MAX_QUANTITY_PER_ITEM));
             case "GET /api/insights" -> insights(exchange);
             default -> throw noRoute();

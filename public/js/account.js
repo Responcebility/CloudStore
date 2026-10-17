@@ -2,7 +2,7 @@
  * File:    account.js
  * Author:  Kasi-Crunch group (JGA 2026)
  * Date:    2026-10-17
- * Purpose: My Account: club membership and order history with live status.
+ * Purpose: My account: Crunch Pass status and order history with live status.
  */
 
 (async () => {
@@ -15,37 +15,21 @@
     location.replace("dashboard.html");
     return;
   }
-  document.getElementById("greeting").textContent = `Hi, ${user.fullName.split(" ")[0]} 👋`;
-  document.getElementById("account-email").textContent = user.email;
+  document.getElementById("greeting").innerHTML = `Hi, <em>${KC.escapeHtml(user.fullName.split(" ")[0])}.</em>`;
+  document.getElementById("email").textContent = user.email;
+  document.getElementById("logout").addEventListener("click", KC.logout);
 
-  const STATUS_TAGS = { Placed: "tag-soft", Preparing: "tag-orange", "Out for delivery": "tag-orange", Delivered: "tag-soft", Cancelled: "tag-hot" };
-  const STATUS_ICONS = { Placed: "🧾", Preparing: "👩🏾‍🍳", "Out for delivery": "🛵", Delivered: "✅", Cancelled: "✖" };
-
-  // ---------- Club ----------
-  const clubBox = document.getElementById("club");
-  if (user.club) {
-    clubBox.innerHTML = `<div class="row space-between">
-        <div><h2 style="margin-bottom:4px">⭐ ${KC.escapeHtml(user.club.name)}</h2>
-          <p class="muted" style="margin:0">Free delivery${user.club.discountRate ? ` and ${Math.round(user.club.discountRate * 100)}% off` : ""} on every order.</p></div>
-        <div class="row"><a class="btn" href="revenue.html#clubs">Change club</a><button class="btn" type="button" data-cancel>Cancel</button></div>
-      </div>`;
-    clubBox.querySelector("[data-cancel]").addEventListener("click", async () => {
-      if (!confirm("Cancel your club membership? You'll pay normal delivery fees again.")) return;
-      try {
-        const result = await KC.api("/api/subscriptions/cancel", { method: "POST", data: {} });
-        KC.toast(result.message);
-        setTimeout(() => location.reload(), 900);
-      } catch (error) {
-        KC.toast(error.message, "error");
-      }
-    });
-  } else {
-    clubBox.innerHTML = `<div class="row space-between">
-        <div><h2 style="margin-bottom:4px">Not in a club yet</h2>
-          <p class="muted" style="margin:0">Crunch Club: free delivery for R49 a month. Family Club adds 10% off.</p></div>
-        <a class="btn btn-primary" href="revenue.html#clubs">See the clubs</a>
-      </div>`;
-  }
+  // ---------- Crunch Pass ----------
+  const passBox = document.getElementById("pass-box");
+  passBox.innerHTML = user.pass
+    ? `<div class="row between">
+        <div><h3 style="margin-bottom:4px">✳ Crunch Pass: ${user.pass.maxKm} km</h3>
+          <p class="muted" style="margin:0">Free delivery within ${user.pass.maxKm} km until ${KC.escapeHtml(user.pass.endsAt)} · ${KC.money(user.pass.price)} this month</p></div>
+        <a class="button button-outline" href="pass.html">Change or cancel</a></div>`
+    : `<div class="row between">
+        <div><h3 style="margin-bottom:4px">No Crunch Pass yet</h3>
+          <p class="muted" style="margin:0">Pick your distance and get free delivery all month, from ${KC.money(KC.passPrice(1))}.</p></div>
+        <a class="button button-primary" href="pass.html">Get a Crunch Pass ↗</a></div>`;
 
   // ---------- Orders ----------
   const holder = document.getElementById("orders");
@@ -53,19 +37,20 @@
     const { orders } = await KC.api("/api/orders/mine");
     holder.innerHTML = orders.length
       ? orders.map((order) => `
-        <article class="card glass">
-          <div class="row space-between">
-            <div><h3 style="margin:0">Order #${order.id}</h3><span class="faint">${KC.escapeHtml(order.createdAt)} · ${KC.escapeHtml(order.paymentMethod)}</span></div>
-            <span class="tag ${STATUS_TAGS[order.status] || ""}" style="font-size:0.85rem">${STATUS_ICONS[order.status] || ""} ${KC.escapeHtml(order.status)}</span>
+        <article class="card">
+          <div class="row between">
+            <div><h3 style="margin:0">Order #${order.id}</h3>
+              <span class="muted small">${KC.escapeHtml(order.createdAt)} · ${order.fulfilment === "delivery" ? `Delivery, ${order.distanceKm} km` : "Collection"} · ${KC.escapeHtml(order.paymentMethod)}</span></div>
+            <span class="tag ${order.status === "Cancelled" ? "tag-red" : "tag-orange"}">${KC.escapeHtml(order.status)}</span>
           </div>
-          <p class="muted" style="margin:10px 0">${order.items.map((i) => `${KC.escapeHtml(i.emoji)} ${KC.escapeHtml(i.name)} × ${i.quantity}`).join(" · ")}</p>
-          <div class="row space-between">
-            <span class="faint">Delivery ${order.deliveryFee ? KC.money(order.deliveryFee) : "free"}${order.discount ? ` · Saved ${KC.money(order.discount)}` : ""}</span>
-            <strong class="price" style="font-size:1.2rem">${KC.money(order.total)}</strong>
+          <p class="muted" style="margin:10px 0">${order.items.map((i) => `${KC.escapeHtml(i.name)} × ${i.quantity}`).join(" · ")}</p>
+          <div class="row between">
+            <span class="muted small">Food ${KC.money(order.subtotal)} · ${order.fulfilment === "delivery" ? `Delivery ${order.deliveryFee ? KC.money(order.deliveryFee) : "free"}` : "Collection free"}</span>
+            <strong style="font-family:var(--heading);font-size:20px">${KC.money(order.total)}</strong>
           </div>
         </article>`).join("")
-      : `<div class="empty glass"><div class="big">🍗</div><p>No orders yet.</p><a class="btn btn-primary" href="menu.html">See the menu</a></div>`;
+      : `<div class="card empty"><div class="big">✳</div><h3>No orders yet.</h3><a class="button button-primary" href="menu.html">See the menu ↗</a></div>`;
   } catch (error) {
-    holder.innerHTML = `<div class="alert alert-error">${KC.escapeHtml(error.message)}</div>`;
+    holder.innerHTML = `<div class="notice notice-error">${KC.escapeHtml(error.message)}</div>`;
   }
 })();

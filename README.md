@@ -1,17 +1,22 @@
-# 🍗 Kasi-Crunch
+# Kasi-Crunch
 
 **"Crunch outside, juicy inside"**
 
-Kasi-Crunch is a township fried-chicken brand with its own online ordering
-website. Customers in Soshanguve and nearby browse the menu, order, and pay
-cash or card when local runners deliver. It was built for the Faculty of ICT
-**Joint Group Assignment (JGA) 2026**, theme *Digital Entrepreneurship for
-Sustainable Community Development*.
+Kasi-Crunch is one kasi kitchen with its own online ordering website, like a
+McDonald's app for a township fast-food brand. There are no other stores or
+vendors. Customers in Soshanguve and nearby browse the menu, then choose
+delivery (R16 per km) or free collection, and pay cash or card on arrival.
+Regulars can buy a **Crunch Pass**: they choose how far free delivery should
+reach (1–20 km), and that distance sets the price for the month.
+
+Built for the Faculty of ICT **Joint Group Assignment (JGA) 2026**, theme
+*Digital Entrepreneurship for Sustainable Community Development*. The visual
+style follows the group's [JGA-Project](https://github.com/260780395/JGA-Project) design.
 
 - **Back end:** Java 19 (JDK built-in HTTP server) + MySQL 8 via JDBC
-- **Front end:** HTML, CSS (red-and-orange glass design over a background photo) and JavaScript
+- **Front end:** HTML, CSS and JavaScript: light paper background, red and orange accents, photo menu cards
 - **Charts:** Chart.js
-- **Revenue model:** e-commerce food sales + monthly club subscriptions + delivery fees
+- **Revenue model:** e-commerce food sales + distance-based delivery fees + Crunch Pass subscription
 
 ---
 
@@ -19,23 +24,24 @@ Sustainable Community Development*.
 
 | Page | What's on it |
 |---|---|
-| Home | Name, slogan, bestsellers, how ordering works, and the elevator pitch (Problem → Solution → Who it's for → How AI helps) |
-| Menu (Products & Services) | 21 items in 7 categories, search, category filter, 🔥 popular and 🌶️ spicy tags |
-| About | Problem statement, aim and objectives, community impact, how it was built |
-| Customer Persona | Thandi, the student customer, and her ordering journey |
-| Revenue Model | Income streams, the two clubs (join here), formulas, sales-by-category chart, interactive **first-year cash-flow, profit/loss and cost-benefit projection** |
+| Home | Name and slogan, hero photo, bestsellers, Crunch Pass teaser, how it works, elevator pitch (Problem → Solution → Who it's for → How AI helps) |
+| Menu (Products & Services) | 28 items with photos in 8 categories (burgers, combos, chicken, sides, pies, rolls, ice cream, drinks), search and category filter |
+| Crunch Pass | Distance slider with a live price (R49 + R15 per km), a "Is it worth it?" comparison, buy, change or cancel |
+| Basket | Quantities, delivery or collection, distance in km, exact delivery fee (minus what your pass covers) before you pay |
+| My account | Crunch Pass status and order history with live status |
+| Our story (About) | Problem statement, aim and objectives, community impact, how it was built |
+| Customer persona | Thandi the student, her journey, and why a 4 km pass saves her R403 a month |
+| Revenue model | Income streams, formulas, pass price table, sales-by-category chart, interactive **first-year cash-flow, profit/loss and cost-benefit projection** |
 | Research | Five case studies (Chicken Licken, Nando's, Galito's, Mr D, Uber Eats), the gap Kasi-Crunch fills, Chicago author-date references |
 | Contact | Validated contact form (saved to MySQL) and quick answers |
-| Your order | Live totals, club discount, R25 delivery or free over R250, free-delivery progress bar, checkout |
-| My account | Club membership and order history with live status |
-| Dashboard (admin) | Revenue, gross profit and margin, club income, mean / median / range, per-day → per-month conversions, 4 charts, top items, margin by category, order status updates, messages, add menu items |
+| Dashboard (admin) | Revenue, gross profit and margin, delivery fees, pass income, mean / median / range of order value and delivery distance, per-day → per-month conversions, 4 charts, top items, margin by category, order status updates, messages, add menu items |
 
-**Crunchy**, a rule-based ordering assistant, sits on every page. It answers
-questions about delivery, clubs and payment, suggests spicy or budget meals,
-searches the menu and checks your latest order.
+**Crunchy**, a rule-based ordering assistant on every page, explains delivery
+and the Crunch Pass, suggests spicy or budget food, searches the menu and
+tracks your latest order.
 
 Every input is validated in the browser **and** again on the server, with
-polite messages such as "Please enter a quantity between 1 and 20." instead of "ERROR".
+polite messages such as "Please enter a delivery distance between 0.1 and 30 km."
 
 ---
 
@@ -57,8 +63,8 @@ polite messages such as "Please enter a quantity between 1 and 20." instead of "
    - Windows (PowerShell): `.\run.ps1`
    - macOS / Linux / Git Bash: `./run.sh`
 
-   On first start it creates the `kasicrunch` database, the tables, the menu
-   and fictional demo orders.
+   On first start it creates the `kasi_crunch` database, the tables, the menu
+   and fictional demo orders and passes.
 4. Open **http://localhost:8080**
 
 ### Demo accounts
@@ -66,10 +72,10 @@ polite messages such as "Please enter a quantity between 1 and 20." instead of "
 | Role | Email | Password |
 |---|---|---|
 | Admin | `admin@kasicrunch.local` | `Admin@2026` |
-| Customer (demo) | `demo4@example.com` | `Demo@2026` |
+| Customer, no pass | `demo4@example.com` | `Demo@2026` |
+| Customer with a 5 km Crunch Pass | `demo1@example.com` | `Demo@2026` |
 
-(`demo1` and `demo2` are Crunch Club members and `demo3` is in the Family Club,
-handy for testing the discounts.) You can also register a new account.
+(`demo2` has an 8 km pass and `demo3` a 3 km pass.) You can also register a new account.
 
 > Change `admin.password` in `config.properties` **before the first start**
 > when hosting publicly. All demo data is fictional.
@@ -80,8 +86,8 @@ handy for testing the discounts.) You can also register a new account.
 ./test.sh        # or .\test.ps1 on Windows
 ```
 
-This runs 42 checks on the money formulas, statistics, validation (including
-bad input such as letters, negatives and huge numbers) and password hashing.
+47 checks on the delivery and pass formulas, statistics, validation (including
+bad input such as letters, negatives, 0 km and 31 km) and password hashing.
 No database is needed.
 
 ---
@@ -90,18 +96,23 @@ No database is needed.
 
 | Parameter | Value |
 |---|---|
-| Delivery fee | R25.00 |
-| Free delivery | orders **over** R250, or any club member |
-| Crunch Club | R49 / month: free delivery |
-| Family Club | R129 / month: free delivery + 10% off every order |
+| Delivery | R16 per km, 0.1–30 km |
+| Collection | free |
+| Crunch Pass | R49 + R15 × chosen km, per month (1–20 km) |
+| With a pass | free delivery within the chosen km; R16 per km only for distance beyond it |
+| Pass length | 30 days; choosing a new distance starts a new month at the new price |
 | Max quantity per item | 20 |
 
 ```
-discount    = subtotal × club discount
-orderTotal  = subtotal − discount + deliveryFee
+deliveryFee = max(0, distance − pass km) × R16     (0 for collection)
+passPrice   = R49 + R15 × chosen km
+orderTotal  = food subtotal + deliveryFee
 grossProfit = food sales − food cost
 margin %    = grossProfit ÷ food sales × 100
 ```
+
+Example: a Kasi Classic (R82) delivered 4.5 km costs R82 + R72 = R154. With a
+5 km Crunch Pass (R124 a month) the same order is R82.
 
 ---
 
@@ -110,7 +121,7 @@ margin %    = grossProfit ÷ food sales × 100
 ```
 CloudStore/                (repository name; the app is Kasi-Crunch)
 ├── src/kasicrunch/        Java back end (server, API, database, formulas)
-├── public/                Website: HTML pages, css/style.css, js/*.js, img/ (background photo, favicon)
+├── public/                Website: HTML pages, css/style.css, js/*.js, img/ (hero photo, menu photos, favicon)
 ├── tests/kasicrunch/      CoreTest.java: automatic checks
 ├── docs/
 │   ├── design.md          Problem statement, variables & parameters, flowchart, pseudocode, IPO tables, database design
@@ -129,8 +140,8 @@ CloudStore/                (repository name; the app is Kasi-Crunch)
 | `POST /api/auth/register`, `/login`, `/logout`, `GET /api/auth/me` | anyone | Accounts and sessions |
 | `GET /api/products?search=&category=&popular=1`, `GET /api/products/categories` | anyone | Menu |
 | `POST /api/products` | admin | Add a menu item |
-| `POST /api/orders`, `GET /api/orders/mine` | logged in | Checkout and order history |
-| `GET /api/plans`, `POST /api/subscriptions`, `POST /api/subscriptions/cancel` | logged in (plans: anyone) | Clubs |
+| `POST /api/orders`, `GET /api/orders/mine` | signed in | Checkout (delivery or collection) and order history |
+| `GET /api/pass/quote?maxKm=`, `POST /api/pass`, `POST /api/pass/cancel` | signed in (quote: anyone) | Crunch Pass |
 | `POST /api/contact` | anyone | Contact form |
 | `GET /api/pricing`, `GET /api/insights` | anyone | Pricing parameters, sales share by category |
 | `POST /api/assistant` | anyone | Crunchy |
@@ -143,8 +154,10 @@ with a managed MySQL database and set the `KASICRUNCH_*` environment variables.
 
 ## Credits
 
-Background photo by [Brian Chan](https://unsplash.com/@tigerrulezzz) on
-[Unsplash](https://unsplash.com/photos/NbXjZomyNEM) (Unsplash License).
-Fonts: Baloo 2 and Poppins (Google Fonts, open licence). Charts: Chart.js.
+Food photos from [Unsplash](https://unsplash.com) under the
+[Unsplash License](https://unsplash.com/license); hero photo by
+[Brian Chan](https://unsplash.com/photos/NbXjZomyNEM). Fonts: DM Sans and
+Space Grotesk (Google Fonts). Charts: Chart.js. Styling based on the group's
+JGA-Project repository.
 
 *JGA 2026 prototype, Faculty of ICT. Demo data only; no real payments are processed.*

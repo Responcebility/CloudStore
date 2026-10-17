@@ -35,10 +35,10 @@
     button.disabled = true;
     try {
       const reply = await KC.api("/api/contact", { method: "POST", data: Object.fromEntries(new FormData(form)) });
-      result.innerHTML = `<div class="alert alert-success">${KC.escapeHtml(reply.message)}</div>`;
+      result.innerHTML = `<div class="notice notice-success">${KC.escapeHtml(reply.message)}</div>`;
       form.reset();
     } catch (error) {
-      result.innerHTML = `<div class="alert alert-error">${KC.escapeHtml(error.message)}</div>`;
+      result.innerHTML = `<div class="notice notice-error">${KC.escapeHtml(error.message)}</div>`;
     } finally {
       button.disabled = false;
     }

@@ -3,46 +3,46 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Contact · Kasi-Crunch</title>
+  <meta name="theme-color" content="#cf343b">
+  <title>Contact | Kasi-Crunch</title>
   <meta name="description" content="Get in touch with Kasi-Crunch.">
   <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-page="contact">
-  <main id="main" class="container">
-    <section class="page-hero glass">
-      <span class="eyebrow">Contact</span>
-      <h1>Talk to <span class="accent-text">us</span></h1>
+  <main id="main" class="container" style="padding-bottom:80px">
+    <section class="page-head">
+      <p class="eyebrow">Contact</p>
+      <h1>Talk to <em>us.</em></h1>
       <p class="lead">A question about your order, catering for an event, or feedback? Send us a message and we'll reply within two working days.</p>
     </section>
 
-    <section class="section grid split">
-      <form class="card glass form-grid" id="contact-form" novalidate>
-        <h2>Send a message</h2>
-        <div class="form-grid two">
+    <div class="grid split">
+      <form class="card form-grid" id="contact-form" novalidate>
+        <div class="form-row">
           <div class="field"><label for="name">Your name</label><input class="input" id="name" name="name" maxlength="80" autocomplete="name"><span class="field-error"></span></div>
           <div class="field"><label for="email">Email address</label><input class="input" id="email" name="email" type="email" maxlength="120" autocomplete="email"><span class="field-error"></span></div>
         </div>
         <div class="field"><label for="subject">Subject</label><input class="input" id="subject" name="subject" maxlength="120"><span class="field-error"></span></div>
         <div class="field"><label for="message">Message</label><textarea class="input" id="message" name="message" maxlength="2000"></textarea><span class="field-error"></span></div>
         <div id="contact-result" role="status"></div>
-        <button class="btn btn-primary btn-lg" type="submit">Send message</button>
+        <button class="button button-primary" type="submit">Send message ↗</button>
       </form>
 
-      <div class="card glass">
-        <h2>Quick answers</h2>
-        <details><summary>How much is delivery?</summary><p class="muted">R25, or free when your order is over R250. Club members always get free delivery.</p></details>
+      <div class="card">
+        <h3>Quick answers</h3>
+        <details><summary>How much is delivery?</summary><p class="muted">R16 per km, up to 30 km. Collection is free, and a Crunch Pass makes delivery free within the distance you choose.</p></details>
         <hr class="divider">
-        <details><summary>Where do you deliver?</summary><p class="muted">Soshanguve and nearby areas in Tshwane.</p></details>
+        <details><summary>How is the Crunch Pass priced?</summary><p class="muted">R49 + R15 for every km of free delivery you choose, for 30 days. A 5 km pass is R124.</p></details>
         <hr class="divider">
-        <details><summary>How do I pay?</summary><p class="muted">Cash or card when your food arrives.</p></details>
+        <details><summary>How do I pay?</summary><p class="muted">Cash or card when your food arrives or when you collect.</p></details>
         <hr class="divider">
-        <details><summary>Can I track my order?</summary><p class="muted">Yes. See My Account, or ask Crunchy "track my order".</p></details>
+        <details><summary>Can I track my order?</summary><p class="muted">Yes, in My account, or ask Crunchy "track my order".</p></details>
       </div>
-    </section>
+    </div>
   </main>
   <script src="js/app.js"></script>
   <script src="js/contact.js"></script>

@@ -32,10 +32,10 @@ public final class Auth {
         }
     }
 
-    /** The shopper's active club membership and what it gives them. */
-    public record Club(String code, String name, double discountRate, boolean freeDelivery) {
+    /** The customer's active Crunch Pass: free delivery up to maxKm until endsAt. */
+    public record Pass(long id, int maxKm, double price, String endsAt) {
         public Map<String, Object> toJson() {
-            return Json.map("code", code, "name", name, "discountRate", discountRate, "freeDelivery", freeDelivery);
+            return Json.map("maxKm", maxKm, "price", price, "endsAt", endsAt);
         }
     }
 
@@ -92,15 +92,15 @@ public final class Auth {
         Http.setSessionCookie(exchange, COOKIE, "", 0);
     }
 
-    /** The user's active club, or null if they are not a member. */
-    public static Club activeClub(Connection connection, long userId) throws SQLException {
-        String sql = "SELECT p.code, p.name, p.discount_rate, p.free_delivery FROM subscriptions s JOIN plans p ON p.id = s.plan_id"
-                + " WHERE s.user_id = ? AND s.status = 'active' ORDER BY s.started_at DESC LIMIT 1";
+    /** The user's current Crunch Pass, or null if they don't have one (or it has run out). */
+    public static Pass activePass(Connection connection, long userId) throws SQLException {
+        String sql = "SELECT id, max_km, price, DATE_FORMAT(ends_at, '%Y-%m-%d') FROM passes"
+                + " WHERE user_id = ? AND status = 'active' AND ends_at > NOW() ORDER BY starts_at DESC, id DESC LIMIT 1";
         try (PreparedStatement query = connection.prepareStatement(sql)) {
             query.setLong(1, userId);
             try (ResultSet row = query.executeQuery()) {
                 if (!row.next()) return null;
-                return new Club(row.getString(1), row.getString(2), row.getDouble(3), row.getBoolean(4));
+                return new Pass(row.getLong(1), row.getInt(2), row.getDouble(3), row.getString(4));
             }
         }
     }

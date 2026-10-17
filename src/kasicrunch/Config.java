@@ -58,7 +58,7 @@ public final class Config {
 
     public String dbHost() { return get("db.host", "localhost"); }
     public int dbPort() { return getInt("db.port", 3306); }
-    public String dbName() { return get("db.name", "kasicrunch"); }
+    public String dbName() { return get("db.name", "kasi_crunch"); }
     public String dbUser() { return get("db.user", "root"); }
     public String dbPassword() { return get("db.password", ""); }
     public int serverPort() { return getInt("server.port", 8080); }

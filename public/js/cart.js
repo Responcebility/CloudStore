@@ -2,68 +2,80 @@
  * File:    cart.js
  * Author:  Kasi-Crunch group (JGA 2026)
  * Date:    2026-10-17
- * Purpose: Order page: change quantities, live totals (club discount and
- *          delivery rule), and checkout. The server recalculates every amount.
+ * Purpose: Basket and checkout: change quantities, choose delivery or
+ *          collection, enter the distance, and see the delivery fee (minus
+ *          what a Crunch Pass covers) before ordering. The server recalculates
+ *          every amount.
  */
 
 (() => {
-  const list = document.getElementById("cart-items");
-  const form = document.getElementById("checkout-form");
-  const result = document.getElementById("checkout-result");
+  const list = document.getElementById("items");
+  const form = document.getElementById("checkout");
+  const result = document.getElementById("result");
+  const distance = document.getElementById("distance");
   const PHONE = /^(0\d{9}|\+27\d{9})$/;
   const set = (id, text) => (document.getElementById(id).textContent = text);
+  const fulfilment = () => form.querySelector("[name=fulfilment]:checked").value;
 
-  function render() {
-    const items = KC.cartItems();
-    const club = KC.user ? KC.user.club : null;
+  function renderItems() {
+    const items = KC.basketItems();
     list.innerHTML = items.length
       ? items.map((item) => `
-        <div class="cart-item">
-          <div class="art" aria-hidden="true">${KC.escapeHtml(item.emoji)}</div>
+        <div class="basket-item">
+          <img src="${KC.escapeHtml(item.image)}" alt="">
           <div>
-            <strong>${KC.escapeHtml(item.name)}</strong>
-            <div class="faint">${KC.money(item.price)} each</div>
-            <div class="qty" aria-label="Quantity of ${KC.escapeHtml(item.name)}">
+            <h3>${KC.escapeHtml(item.name)}</h3>
+            <span class="muted small">${KC.money(item.price)} each</span>
+            <div class="quantity" aria-label="Quantity of ${KC.escapeHtml(item.name)}">
               <button type="button" data-dec="${item.id}" aria-label="One less">−</button>
               <span>${item.qty}</span>
               <button type="button" data-inc="${item.id}" aria-label="One more">+</button>
             </div>
           </div>
           <div style="text-align:right">
-            <div class="price" style="font-size:1.15rem">${KC.money(item.price * item.qty)}</div>
-            <button class="btn btn-sm" type="button" data-remove="${item.id}" style="margin-top:6px">Remove</button>
+            <strong>${KC.money(item.price * item.qty)}</strong><br>
+            <button class="button button-outline button-small" type="button" data-remove="${item.id}" style="margin-top:8px">Remove</button>
           </div>
         </div>`).join("")
-      : `<div class="empty"><div class="big">🍗</div><p>Your order is empty. Hungry?</p><a class="btn btn-primary" href="menu.html">See the menu</a></div>`;
+      : `<div class="empty"><div class="big">✳</div><h3>It's a little empty in here.</h3><p>Let's fix that with something delicious.</p>
+          <a class="button button-primary" href="menu.html">Explore the menu ↗</a></div>`;
+  }
 
-    const totals = KC.cartTotals(club);
-    set("sum-subtotal", KC.money(totals.subtotal));
-    document.getElementById("row-discount").hidden = !totals.discount;
-    set("discount-label", club ? `${club.name} discount` : "Discount");
-    set("sum-discount", "−" + KC.money(totals.discount));
-    set("sum-delivery", totals.subtotal === 0 ? KC.money(0) : totals.delivery === 0 ? "Free" : KC.money(totals.delivery));
-    set("sum-total", KC.money(totals.total));
+  function renderTotals() {
+    const subtotal = KC.subtotal();
+    const pass = KC.user ? KC.user.pass : null;
+    const delivering = fulfilment() === "delivery";
+    document.getElementById("delivery-fields").hidden = !delivering;
 
-    const threshold = KC.pricing.freeDeliveryThreshold;
-    const note = document.getElementById("free-delivery");
-    if (club && club.freeDelivery) {
-      note.textContent = `⭐ Free delivery with your ${club.name}.`;
-    } else if (totals.subtotal > threshold) {
-      note.textContent = "🎉 Your order gets free delivery.";
-    } else if (totals.subtotal > 0) {
-      const percent = Math.min(100, (totals.subtotal / threshold) * 100);
-      note.innerHTML = `Add ${KC.money(threshold - totals.subtotal + 0.01)} more for free delivery.
-        <div class="progress" aria-hidden="true"><span style="width:${percent}%"></span></div>`;
-    } else {
-      note.textContent = "";
+    const km = Number(distance.value);
+    const validKm = distance.value !== "" && km >= 0.1 && km <= KC.pricing.maxDeliveryKm;
+    let fee = 0;
+    let label = "Delivery";
+    if (!delivering) {
+      label = "Collection";
+    } else if (validKm) {
+      fee = KC.deliveryFee(km, pass ? pass.maxKm : 0);
+      if (pass) label = km <= pass.maxKm ? `Delivery (Crunch Pass, ${pass.maxKm} km)` : `Delivery (${KC.round2(km - pass.maxKm)} km beyond your pass)`;
     }
-    document.getElementById("place-order").disabled = !items.length;
+    set("distance-hint", pass
+      ? `Your Crunch Pass covers ${pass.maxKm} km for free. Beyond that: R16 per km.`
+      : "Delivery is R16 per km, up to 30 km. A Crunch Pass makes it free.");
+    set("sum-subtotal", KC.money(subtotal));
+    set("delivery-label", label);
+    set("sum-delivery", !delivering ? "Free" : validKm ? (fee === 0 ? "Free" : KC.money(fee)) : "Enter distance");
+    set("sum-total", KC.money(subtotal + fee));
+    document.getElementById("place").disabled = !KC.basketItems().length;
+  }
+
+  function render() {
+    renderItems();
+    renderTotals();
   }
 
   list.addEventListener("click", (event) => {
     const button = event.target.closest("button");
     if (!button) return;
-    const item = KC.cartItems().find((i) => String(i.id) === (button.dataset.inc || button.dataset.dec || button.dataset.remove));
+    const item = KC.basketItems().find((i) => String(i.id) === (button.dataset.inc || button.dataset.dec || button.dataset.remove));
     if (!item) return;
     if (button.dataset.inc) {
       const limit = Math.min(KC.pricing.maxQuantityPerItem, item.stock ?? 99);
@@ -77,6 +89,9 @@
     render();
   });
 
+  form.addEventListener("input", renderTotals);
+  form.addEventListener("change", renderTotals);
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     result.innerHTML = "";
@@ -84,32 +99,40 @@
       document.getElementById("login-note").hidden = false;
       return;
     }
+    const delivering = fulfilment() === "delivery";
     const address = document.getElementById("address");
     const phone = document.getElementById("phone");
     const cleanPhone = phone.value.replace(/[\s-]/g, "");
-    let ok = showFieldError(address, address.value.trim().length >= 5 ? "" : "Please enter your delivery address (at least 5 characters).");
+    let ok = true;
+    if (delivering) {
+      const km = Number(distance.value);
+      ok = showFieldError(address, address.value.trim().length >= 5 ? "" : "Please enter your delivery address (at least 5 characters).") && ok;
+      ok = showFieldError(distance, distance.value !== "" && km >= 0.1 && km <= 30 ? "" : "Please enter a distance between 0.1 and 30 km.") && ok;
+    }
     ok = showFieldError(phone, PHONE.test(cleanPhone) ? "" : "Please enter a South African phone number, for example 0712345678.") && ok;
     if (!ok) return;
 
-    const button = document.getElementById("place-order");
+    const button = document.getElementById("place");
     button.disabled = true;
     try {
-      const order = await KC.api("/api/orders", {
-        method: "POST",
-        data: {
-          items: KC.cartItems().map((item) => `${item.id}:${item.qty}`).join(","),
-          address: address.value.trim(),
-          phone: cleanPhone,
-          paymentMethod: document.getElementById("paymentMethod").value,
-        },
-      });
-      KC.clearCart();
+      const data = {
+        items: KC.basketItems().map((item) => `${item.id}:${item.qty}`).join(","),
+        fulfilment: fulfilment(),
+        phone: cleanPhone,
+        paymentMethod: document.getElementById("payment").value,
+      };
+      if (delivering) {
+        data.address = address.value.trim();
+        data.distanceKm = distance.value;
+      }
+      const order = await KC.api("/api/orders", { method: "POST", data });
+      KC.clearBasket();
       form.reset();
       render();
-      result.innerHTML = `<div class="alert alert-success">${KC.escapeHtml(order.message)} Total: ${KC.money(order.total)}.
-        <a href="account.html">Track it in My Account →</a></div>`;
+      result.innerHTML = `<div class="notice notice-success">${KC.escapeHtml(order.message)} Total: <strong>${KC.money(order.total)}</strong>.
+        ${order.deliveryNote ? KC.escapeHtml(order.deliveryNote) : ""} <a href="account.html"><strong>Track it in My account →</strong></a></div>`;
     } catch (error) {
-      result.innerHTML = `<div class="alert alert-error">${KC.escapeHtml(error.message)}</div>`;
+      result.innerHTML = `<div class="notice notice-error">${KC.escapeHtml(error.message)}</div>`;
       button.disabled = false;
     }
   });
@@ -117,6 +140,6 @@
   render();
   KC.ready.then(() => {
     document.getElementById("login-note").hidden = Boolean(KC.user);
-    render();
+    renderTotals();
   });
 })();

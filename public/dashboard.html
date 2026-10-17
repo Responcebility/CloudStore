@@ -3,85 +3,75 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard · Kasi-Crunch</title>
+  <meta name="theme-color" content="#cf343b">
+  <title>Dashboard | Kasi-Crunch</title>
   <meta name="robots" content="noindex">
   <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-page="dashboard">
-  <main id="main" class="container">
-    <section class="page-hero glass">
-      <span class="eyebrow">Admin</span>
-      <h1>Sales <span class="accent-text">dashboard</span></h1>
-      <p class="lead">Live figures from the database. Cancelled orders are left out.</p>
+  <main id="main" class="container" style="padding-bottom:80px">
+    <section class="page-head row between">
+      <div><p class="eyebrow">Admin</p><h1 style="font-size:clamp(36px,5vw,56px)">Sales <em>dashboard.</em></h1>
+        <p class="muted" style="margin:0">Live figures from the database. Cancelled orders are left out.</p></div>
+      <button class="button button-outline" type="button" id="logout">Sign out</button>
     </section>
 
-    <div id="dashboard" hidden>
-      <section class="section grid grid-4">
-        <div class="stat glass"><div class="stat-label">Revenue</div><div class="stat-value" id="t-revenue">–</div><div class="stat-note" id="t-orders"></div></div>
-        <div class="stat glass"><div class="stat-label">Gross profit</div><div class="stat-value" id="t-profit">–</div><div class="stat-note" id="t-margin"></div></div>
-        <div class="stat glass"><div class="stat-label">Club income / month</div><div class="stat-value" id="t-clubs">–</div><div class="stat-note" id="t-discounts"></div></div>
-        <div class="stat glass"><div class="stat-label">Customers</div><div class="stat-value" id="t-customers">–</div><div class="stat-note" id="t-menu"></div></div>
-      </section>
+    <div id="dashboard" hidden class="stack">
+      <div class="grid grid-4">
+        <div class="stat"><div class="stat-label">Revenue</div><div class="stat-value" id="t-revenue">–</div><div class="stat-note" id="t-orders"></div></div>
+        <div class="stat"><div class="stat-label">Food gross profit</div><div class="stat-value" id="t-profit">–</div><div class="stat-note" id="t-margin"></div></div>
+        <div class="stat"><div class="stat-label">Delivery fees</div><div class="stat-value" id="t-delivery">–</div><div class="stat-note" id="t-waived"></div></div>
+        <div class="stat"><div class="stat-label">Crunch Pass income</div><div class="stat-value" id="t-pass">–</div><div class="stat-note" id="t-pass-note"></div></div>
+      </div>
 
-      <section class="section grid grid-2">
-        <div class="card glass">
-          <h2>Order value</h2>
-          <div class="grid grid-3">
-            <div><div class="stat-label">Mean</div><div class="stat-value" style="font-size:1.5rem" id="s-mean">–</div></div>
-            <div><div class="stat-label">Median</div><div class="stat-value" style="font-size:1.5rem" id="s-median">–</div></div>
-            <div><div class="stat-label">Range</div><div class="stat-value" style="font-size:1.5rem" id="s-range">–</div><div class="stat-note" id="s-minmax"></div></div>
-          </div>
-          <p class="muted" style="margin:16px 0 0" id="s-note"></p>
-        </div>
-        <div class="card glass">
-          <h2>Per day → per month</h2>
-          <p class="faint">Last 30 days, × 30.44 days per month</p>
-          <div class="table-wrap"><table><tbody id="conversions"></tbody></table></div>
-        </div>
-      </section>
+      <div class="grid grid-3">
+        <div class="card"><h3>Order value</h3>
+          <table><tbody id="order-stats"></tbody></table></div>
+        <div class="card"><h3>Delivery distance</h3>
+          <table><tbody id="distance-stats"></tbody></table></div>
+        <div class="card"><h3>Per day → per month</h3><p class="muted small" style="margin:-6px 0 6px">Last 30 days × 30.44</p>
+          <table><tbody id="conversions"></tbody></table></div>
+      </div>
 
-      <section class="section grid grid-2">
-        <div class="card glass"><h3>Daily revenue (30 days)</h3><div class="chart-box"><canvas id="trend-chart" aria-label="Daily revenue for the last 30 days"></canvas></div></div>
-        <div class="card glass"><h3>Sales by category</h3><div class="chart-box"><canvas id="category-chart" aria-label="Sales by category"></canvas></div></div>
-        <div class="card glass"><h3>Orders by size</h3><div class="chart-box"><canvas id="bands-chart" aria-label="Orders by value band"></canvas></div></div>
-        <div class="card glass"><h3>Where the money comes from</h3><div class="chart-box"><canvas id="income-chart" aria-label="Income mix"></canvas></div></div>
-      </section>
+      <div class="grid grid-2">
+        <div class="card"><h3>Daily revenue (30 days)</h3><div class="chart-box"><canvas id="trend-chart" aria-label="Daily revenue"></canvas></div></div>
+        <div class="card"><h3>Sales by category</h3><div class="chart-box"><canvas id="category-chart" aria-label="Sales by category"></canvas></div></div>
+        <div class="card"><h3>Deliveries by distance</h3><div class="chart-box"><canvas id="distance-chart" aria-label="Deliveries by distance"></canvas></div></div>
+        <div class="card"><h3>Delivery vs collection</h3><div class="chart-box"><canvas id="fulfilment-chart" aria-label="Delivery versus collection"></canvas></div></div>
+      </div>
 
-      <section class="section grid grid-2">
-        <div class="card glass"><h3>Top 5 items</h3><div class="table-wrap"><table>
+      <div class="grid grid-2">
+        <div class="card"><h3>Top 5 items</h3><div class="table-wrap"><table>
           <thead><tr><th>Item</th><th class="num">Sold</th><th class="num">Sales</th></tr></thead><tbody id="top-items"></tbody></table></div></div>
-        <div class="card glass"><h3>Margin by category</h3><div class="table-wrap"><table>
+        <div class="card"><h3>Margin by category</h3><div class="table-wrap"><table>
           <thead><tr><th>Category</th><th class="num">Share of sales</th><th class="num">Margin</th></tr></thead><tbody id="margins"></tbody></table></div></div>
-      </section>
+      </div>
 
-      <section class="section card glass">
-        <h2>Recent orders</h2>
-        <div class="table-wrap"><table>
-          <thead><tr><th>Order</th><th>Customer</th><th>Time</th><th class="num">Total</th><th>Status</th></tr></thead>
-          <tbody id="orders"></tbody></table></div>
-      </section>
+      <div class="card"><h3>Recent orders</h3><div class="table-wrap"><table>
+        <thead><tr><th>Order</th><th>Customer</th><th>Time</th><th>Type</th><th class="num">Total</th><th>Status</th></tr></thead>
+        <tbody id="orders"></tbody></table></div></div>
 
-      <section class="section grid split">
-        <div class="card glass"><h2>Messages</h2><div id="messages" class="stack"></div></div>
-        <form class="card glass form-grid" id="item-form" novalidate>
-          <h2>Add a menu item</h2>
+      <div class="grid split">
+        <div class="card"><h3>Messages</h3><div id="messages" class="stack"></div></div>
+        <form class="card form-grid" id="item-form" novalidate>
+          <h3 style="margin:0">Add a menu item</h3>
           <div class="field"><label for="i-name">Name</label><input class="input" id="i-name" name="name" maxlength="100"><span class="field-error"></span></div>
           <div class="field"><label for="i-description">Description</label><input class="input" id="i-description" name="description" maxlength="300"><span class="field-error"></span></div>
-          <div class="form-grid two">
+          <div class="form-row">
             <div class="field"><label for="i-category">Category</label><select class="input" id="i-category" name="category"></select></div>
-            <div class="field"><label for="i-emoji">Emoji</label><input class="input" id="i-emoji" name="emoji" maxlength="8" placeholder="🍗"></div>
+            <div class="field"><label for="i-image">Photo</label><select class="input" id="i-image" name="image"></select></div>
             <div class="field"><label for="i-price">Price (R)</label><input class="input" id="i-price" name="price" type="number" step="0.01"><span class="field-error"></span></div>
             <div class="field"><label for="i-cost">Food cost (R)</label><input class="input" id="i-cost" name="cost" type="number" step="0.01"><span class="field-error"></span></div>
             <div class="field"><label for="i-stock">Daily stock</label><input class="input" id="i-stock" name="stock" type="number" step="1"><span class="field-error"></span></div>
-            <div class="field"><label for="i-spicy">Spicy?</label><select class="input" id="i-spicy" name="spicy"><option value="0">No</option><option value="1">Yes 🌶️</option></select></div>
+            <div class="field"><label for="i-spicy">Spicy?</label><select class="input" id="i-spicy" name="spicy"><option value="0">No</option><option value="1">Yes</option></select></div>
           </div>
-          <button class="btn btn-primary" type="submit">Add to menu</button>
+          <button class="button button-primary" type="submit">Add to menu</button>
         </form>
-      </section>
+      </div>
     </div>
   </main>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
