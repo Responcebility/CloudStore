@@ -85,7 +85,15 @@ img { max-width: 100%; display: block; }
   .main-nav.open { display: flex; }
   .main-nav a { padding: 12px; font-size: 17px; }
   .mobile-menu { display: block; }
-  .account-link { display: none; }
+  .header-actions .account-link { display: none; }
+}
+@media (max-width: 420px) {
+  .container { width: calc(100% - 28px); }
+  .brand-mark { width: 34px; height: 34px; font-size: 13px; }
+  .brand { font-size: 16px; gap: 8px; }
+  .basket-link { padding: 9px 11px; }
+  .basket-link .basket-word { display: none; }
+  .announcement { font-size: 11px; letter-spacing: 0.6px; }
 }
 
 /* ---------- Buttons ---------- */
@@ -135,7 +143,7 @@ main { min-height: 50vh; }
 .split { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); align-items: start; }
 @media (max-width: 900px) { .grid-3, .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .split { grid-template-columns: 1fr; } }
 @media (max-width: 600px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } .section { padding: 56px 0; } }
-.card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; }
+.card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; box-shadow: 0 1px 2px rgba(23, 23, 20, 0.04); }
 .card p:last-child { margin-bottom: 0; }
 .card-icon { font-size: 30px; margin-bottom: 10px; line-height: 1; }
 .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
@@ -178,7 +186,9 @@ main { min-height: 50vh; }
 .menu-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px 20px; }
 @media (max-width: 900px) { .menu-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; } }
 @media (max-width: 480px) { .menu-grid { grid-template-columns: 1fr; } }
-.menu-card { background: var(--white); border: 1px solid #ebe6dc; border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; animation: fade-up 0.4s both; }
+.menu-card { background: var(--white); border: 1px solid #ebe6dc; border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; animation: fade-up 0.4s both;
+  transition: box-shadow 0.25s, transform 0.25s; }
+.menu-card:hover { box-shadow: 0 16px 40px rgba(23, 23, 20, 0.12); transform: translateY(-3px); }
 @keyframes fade-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 .menu-image { height: 220px; position: relative; overflow: hidden; background: var(--paper-deep); }
 .menu-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
@@ -256,7 +266,8 @@ textarea.input { min-height: 130px; resize: vertical; }
 
 /* ---------- Crunch Pass ---------- */
 .pass-card { background: var(--ink); color: #fff; border-radius: var(--radius); padding: 34px; position: relative; overflow: hidden; }
-.pass-card::after { content: "KC"; position: absolute; right: -10px; bottom: -40px; font: 700 160px var(--heading); color: rgba(255, 255, 255, 0.05); letter-spacing: -10px; }
+.pass-card > * { position: relative; z-index: 1; }
+.pass-card::after { content: "KC"; position: absolute; z-index: 0; right: -10px; bottom: -40px; font: 700 160px var(--heading); color: rgba(255, 255, 255, 0.05); letter-spacing: -10px; }
 .pass-card .muted { color: #c9c4b8; }
 .pass-price { font: 700 64px var(--heading); letter-spacing: -2px; color: #fff; line-height: 1; margin: 6px 0; }
 .pass-price small { font-size: 18px; color: #c9c4b8; letter-spacing: 0; }

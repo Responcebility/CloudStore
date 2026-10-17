@@ -19,7 +19,7 @@
     set("km-label", km);
     set("km-inline", km);
     set("km-tick", km);
-    document.getElementById("price").innerHTML = `${KC.money(price).replace(".00", "")}<small> / month</small>`;
+    document.getElementById("price").innerHTML = `${KC.money(price)}<small> / month</small>`;
 
     // Compare a month of orders delivered at the pass's full distance.
     const perOrder = KC.deliveryFee(km, 0);

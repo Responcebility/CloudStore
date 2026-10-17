@@ -26,10 +26,14 @@ public final class ProductHandler extends ApiHandler {
     /** Photos admins can pick for a new item (files in public/img/menu). */
     public static final String[] IMAGES = {
         "photo-1568901346375-23c9450c58cd", "photo-1572802419224-296b0aeee0d9", "photo-1606755962773-d324e0a13086",
-        "photo-1626082927389-6cd097cdc6ec", "photo-1527477396000-e27163b481c2", "photo-1573080496219-bb080dd4f877",
-        "photo-1667499989723-c4ab9549d63c", "photo-1788240260780-fc3b79c05b75", "photo-1539252554453-80ab65ce3586",
+        "photo-1561758033-d89a9ad46330", "photo-1767065703448-711ccce86798", "photo-1606149059549-6042addafc5a",
+        "photo-1626082927389-6cd097cdc6ec", "photo-1580217593608-61931cefc821", "photo-1426869981800-95ebf51ce900",
+        "photo-1527477396000-e27163b481c2", "photo-1578874557108-9fc2cfb1121e", "photo-1573080496219-bb080dd4f877",
+        "photo-1639744210631-209fce3e256c", "photo-1667499989723-c4ab9549d63c", "photo-1581986675622-41eccf27129d",
+        "photo-1546024664-9226c2d3819b", "photo-1539252554453-80ab65ce3586", "photo-1626700051175-6818013e1d4f",
         "photo-1560008581-09826d1de69e", "photo-1572490122747-3968b75cc699", "photo-1513558003720-343f3a99d97b",
-        "photo-1629654613528-5d0a2e4166de", "photo-1548839140-29a749e1cf4d"};
+        "photo-1752550901046-ad49e6063dd7", "photo-1629654613528-5d0a2e4166de", "photo-1696739696220-8d2e27465662",
+        "photo-1629186235045-80d4147d90dc", "photo-1548839140-29a749e1cf4d", "photo-1594212699903-ec8a3eca50f5"};
 
     private static final String PRODUCT_SELECT =
             "SELECT id, name, description, category, price, stock, image, popular, spicy FROM products";

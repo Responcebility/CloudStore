@@ -23,8 +23,12 @@ const KC = (() => {
     return String(value ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   }
 
+  /** R82, R1 250 or R74.90: cents only when there are some. */
   function money(amount) {
-    return "R" + Number(amount || 0).toLocaleString("en-ZA", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const value = Math.round(Number(amount || 0) * 100) / 100;
+    const whole = Math.trunc(Math.abs(value)).toLocaleString("en-ZA");
+    const cents = Math.round(Math.abs(value) * 100) % 100;
+    return (value < 0 ? "−R" : "R") + whole + (cents ? "." + String(cents).padStart(2, "0") : "");
   }
 
   const round2 = (n) => Math.round(n * 100) / 100;
@@ -135,7 +139,7 @@ const KC = (() => {
           </nav>
           <div class="header-actions">
             <span class="auth-slot"><a class="button button-outline button-small account-link" href="login.html">Sign in</a></span>
-            <a class="basket-link" href="cart.html">Basket <span class="basket-count">0</span></a>
+            <a class="basket-link" href="cart.html" aria-label="Basket">🛒 <span class="basket-word">Basket</span> <span class="basket-count">0</span></a>
             <button class="mobile-menu" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
           </div>
         </div>

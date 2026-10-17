@@ -171,7 +171,19 @@ public final class Database {
         String wings = "photo-1527477396000-e27163b481c2";
         String fries = "photo-1573080496219-bb080dd4f877";
         String mac = "photo-1667499989723-c4ab9549d63c";
-        String pie = "photo-1788240260780-fc3b79c05b75";
+        String chickenPie = "photo-1581986675622-41eccf27129d";
+        String steakPie = "photo-1546024664-9226c2d3819b";
+        String classicCombo = "photo-1561758033-d89a9ad46330";
+        String doubleCombo = "photo-1767065703448-711ccce86798";
+        String spicyCombo = "photo-1606149059549-6042addafc5a";
+        String crunchBox = "photo-1580217593608-61931cefc821";
+        String bucket = "photo-1426869981800-95ebf51ce900";
+        String wingsCombo = "photo-1578874557108-9fc2cfb1121e";
+        String loadedChips = "photo-1639744210631-209fce3e256c";
+        String wrap = "photo-1626700051175-6818013e1d4f";
+        String can = "photo-1696739696220-8d2e27465662";
+        String colaPour = "photo-1629186235045-80d4147d90dc";
+        String guava = "photo-1752550901046-ad49e6063dd7";
         String roll = "photo-1539252554453-80ab65ce3586";
         String iceCream = "photo-1560008581-09826d1de69e";
         String shake = "photo-1572490122747-3968b75cc699";
@@ -184,30 +196,30 @@ public final class Database {
             {"The Kasi Classic", "Crispy chicken, slaw, pickles and our signature sauce in a toasted bun.", "Burgers", 82, 34, 120, classic, 1, 0},
             {"Double Trouble", "Two flame-grilled patties, melted cheese, caramelised onion and smoky sauce.", "Burgers", 109, 46, 80, doubleBurger, 0, 0},
             {"Spicy Crunch Burger", "Golden crunchy chicken, fresh lettuce and a proper peri-peri kick.", "Burgers", 89, 37, 100, spicyBurger, 1, 1},
-            {"Kasi Classic Combo", "The Kasi Classic with fries and a cool drink.", "Meal Combos", 119, 50, 100, classic, 1, 0},
-            {"Double Trouble Combo", "Double Trouble with fries and a cool drink.", "Meal Combos", 149, 63, 70, doubleBurger, 0, 0},
-            {"Spicy Crunch Combo", "A spicy chicken burger with fries and a cool drink.", "Meal Combos", 129, 54, 80, spicyBurger, 0, 1},
-            {"Kasi Crunch Box Meal", "Crispy chicken pieces, fries, creamy slaw, a soft roll and a cool drink.", "Meal Combos", 139, 58, 90, chicken, 1, 0},
-            {"Street Wings Combo", "Six house-sauced wings with fries and a cool drink.", "Meal Combos", 119, 49, 80, wings, 0, 0},
+            {"Kasi Classic Combo", "The Kasi Classic with fries and a cool drink.", "Meal Combos", 119, 50, 100, classicCombo, 1, 0},
+            {"Double Trouble Combo", "Double Trouble with fries and a cool drink.", "Meal Combos", 149, 63, 70, doubleCombo, 0, 0},
+            {"Spicy Crunch Combo", "A spicy chicken burger with fries and a cool drink.", "Meal Combos", 129, 54, 80, spicyCombo, 0, 1},
+            {"Kasi Crunch Box Meal", "Crispy chicken pieces, fries, creamy slaw, a soft roll and a cool drink.", "Meal Combos", 139, 58, 90, crunchBox, 1, 0},
+            {"Street Wings Combo", "Six house-sauced wings with fries and a cool drink.", "Meal Combos", 119, 49, 80, wingsCombo, 0, 0},
             {"3-Piece Crunch Chicken", "Three pieces of our signature chicken: crunch outside, juicy inside.", "Chicken", 69, 28, 120, chicken, 1, 0},
-            {"Family Bucket (8 pieces)", "Eight golden pieces to share with the whole family.", "Chicken", 189, 82, 50, chicken, 0, 0},
+            {"Family Bucket (8 pieces)", "Eight golden pieces to share with the whole family.", "Chicken", 189, 82, 50, bucket, 0, 0},
             {"Street Wings (6)", "Six smoky wings tossed in our house sauce.", "Chicken", 76, 31, 100, wings, 1, 1},
             {"Hand-Cut Fries", "Golden, lightly seasoned fries, cooked until crisp.", "Sides", 29, 9, 200, fries, 0, 0},
-            {"Loaded Township Chips", "Skin-on chips with cheese sauce, jalapeños and house seasoning.", "Sides", 64, 24, 90, fries, 0, 1},
+            {"Loaded Township Chips", "Skin-on chips with cheese sauce, jalapeños and house seasoning.", "Sides", 64, 24, 90, loadedChips, 0, 1},
             {"Mac & Cheese Cup", "Creamy, cheesy macaroni, made fresh.", "Sides", 52, 19, 70, mac, 0, 0},
-            {"Golden Chicken Pie", "Flaky pastry filled with savoury chicken and gently spiced gravy.", "Pies", 32, 12, 80, pie, 0, 0},
-            {"Pepper Steak Pie", "Crisp, golden pastry with a savoury, peppery steak filling.", "Pies", 36, 14, 80, pie, 0, 0},
+            {"Golden Chicken Pie", "Flaky pastry filled with savoury chicken and gently spiced gravy.", "Pies", 32, 12, 80, chickenPie, 0, 0},
+            {"Pepper Steak Pie", "Crisp, golden pastry with a savoury, peppery steak filling.", "Pies", 36, 14, 80, steakPie, 0, 0},
             {"Braai Chicken Roll", "Seasoned chicken, crunchy slaw and tangy house sauce in a soft roll.", "Rolls", 59, 24, 80, roll, 0, 0},
-            {"Chilli Crunch Roll", "Crispy chicken, fresh greens and a lively chilli dressing in a toasted roll.", "Rolls", 62, 25, 80, roll, 0, 1},
+            {"Chilli Crunch Wrap", "Crispy chicken, fresh greens and a lively chilli dressing in a warm tortilla.", "Rolls", 62, 25, 80, wrap, 0, 1},
             {"Vanilla Ice Cream · Small", "A small cup of smooth vanilla ice cream.", "Ice Cream", 22, 7, 100, iceCream, 0, 0},
             {"Vanilla Ice Cream · Regular", "A regular cup of smooth vanilla ice cream.", "Ice Cream", 32, 10, 100, iceCream, 0, 0},
             {"Vanilla Ice Cream · Large", "A large cup of smooth vanilla ice cream.", "Ice Cream", 42, 13, 100, iceCream, 0, 0},
             {"Choc-O-Block Shake", "Thick chocolate shake, blended fresh.", "Drinks", 48, 17, 80, shake, 0, 0},
             {"House Lemonade", "Fresh, zesty lemonade: the perfect sidekick to the heat.", "Drinks", 32, 9, 80, lemonade, 0, 0},
-            {"Guava Cooler", "A chilled, fruity guava drink.", "Drinks", 28, 8, 80, lemonade, 0, 0},
+            {"Guava Cooler", "A chilled, fruity guava drink.", "Drinks", 28, 8, 80, guava, 0, 0},
             {"Coke", "A chilled Coke.", "Drinks", 25, 12, 200, cola, 0, 0},
-            {"Sprite", "A chilled Sprite.", "Drinks", 25, 12, 200, cola, 0, 0},
-            {"Pepsi", "A chilled Pepsi.", "Drinks", 25, 12, 200, cola, 0, 0},
+            {"Sprite", "A chilled Sprite.", "Drinks", 25, 12, 200, can, 0, 0},
+            {"Pepsi", "A chilled Pepsi.", "Drinks", 25, 12, 200, colaPour, 0, 0},
             {"Still Water", "A bottle of refreshing still water.", "Drinks", 20, 6, 200, water, 0, 0},
         };
         String sql = "INSERT INTO products (name, description, category, price, cost, stock, image, popular, spicy) VALUES (?,?,?,?,?,?,?,?,?)";
