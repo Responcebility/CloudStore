@@ -31,9 +31,10 @@ public final class ProductHandler extends ApiHandler {
         "photo-1527477396000-e27163b481c2", "photo-1578874557108-9fc2cfb1121e", "photo-1573080496219-bb080dd4f877",
         "photo-1639744210631-209fce3e256c", "photo-1667499989723-c4ab9549d63c", "photo-1581986675622-41eccf27129d",
         "photo-1546024664-9226c2d3819b", "photo-1539252554453-80ab65ce3586", "photo-1626700051175-6818013e1d4f",
-        "photo-1560008581-09826d1de69e", "photo-1572490122747-3968b75cc699", "photo-1513558003720-343f3a99d97b",
-        "photo-1752550901046-ad49e6063dd7", "photo-1629654613528-5d0a2e4166de", "photo-1696739696220-8d2e27465662",
-        "photo-1629186235045-80d4147d90dc", "photo-1548839140-29a749e1cf4d", "photo-1594212699903-ec8a3eca50f5"};
+        "photo-1686922172452-65f39c99ea6a", "photo-1568903880699-b53f3e0c2b96", "photo-1597249536924-b226b1a1259d",
+        "photo-1786052598262-9c649b0d825f", "photo-1523677011781-c91d1bbe2f9e",
+        "photo-1658215248706-52550a0b1ef1", "photo-1517959105821-eaf2591984ca", "photo-1621330716555-5cad596c4562",
+        "photo-1630184799082-05623dbdc7f7", "photo-1553564552-02656d6a2390", "photo-1594212699903-ec8a3eca50f5"};
 
     private static final String PRODUCT_SELECT =
             "SELECT id, name, description, category, price, stock, image, popular, spicy FROM products";

@@ -12,7 +12,8 @@
   const chips = document.getElementById("categories");
   let categories = [];
   let products = [];
-  let category = "";
+  // A link such as menu.html?category=Drinks opens straight on that category.
+  let category = new URLSearchParams(location.search).get("category") || "";
   let timer;
 
   function render() {
@@ -61,7 +62,10 @@
     try {
       ({ categories } = await KC.api("/api/products/categories"));
       chips.innerHTML = ["All", ...categories]
-        .map((name) => `<button class="category-chip ${name === "All" ? "active" : ""}" type="button" data-category="${name === "All" ? "" : KC.escapeHtml(name)}">${KC.escapeHtml(name)}</button>`)
+        .map((name) => {
+          const value = name === "All" ? "" : name;
+          return `<button class="category-chip ${value === category ? "active" : ""}" type="button" data-category="${KC.escapeHtml(value)}">${KC.escapeHtml(name)}</button>`;
+        })
         .join("");
     } catch {
       // Without categories the menu still loads as one list.

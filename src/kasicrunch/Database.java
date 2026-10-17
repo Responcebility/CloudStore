@@ -181,15 +181,17 @@ public final class Database {
         String wingsCombo = "photo-1578874557108-9fc2cfb1121e";
         String loadedChips = "photo-1639744210631-209fce3e256c";
         String wrap = "photo-1626700051175-6818013e1d4f";
-        String can = "photo-1696739696220-8d2e27465662";
-        String colaPour = "photo-1629186235045-80d4147d90dc";
-        String guava = "photo-1752550901046-ad49e6063dd7";
+        String lemonSoda = "photo-1621330716555-5cad596c4562";
+        String colaTop = "photo-1630184799082-05623dbdc7f7";
+        String guava = "photo-1658215248706-52550a0b1ef1";
         String roll = "photo-1539252554453-80ab65ce3586";
-        String iceCream = "photo-1560008581-09826d1de69e";
-        String shake = "photo-1572490122747-3968b75cc699";
-        String lemonade = "photo-1513558003720-343f3a99d97b";
-        String cola = "photo-1629654613528-5d0a2e4166de";
-        String water = "photo-1548839140-29a749e1cf4d";
+        String coneSmall = "photo-1686922172452-65f39c99ea6a";
+        String bowlRegular = "photo-1568903880699-b53f3e0c2b96";
+        String cupLarge = "photo-1597249536924-b226b1a1259d";
+        String shake = "photo-1786052598262-9c649b0d825f";
+        String lemonade = "photo-1523677011781-c91d1bbe2f9e";
+        String cola = "photo-1517959105821-eaf2591984ca";
+        String water = "photo-1553564552-02656d6a2390";
 
         // {name, description, category, price, food cost, daily stock, image, popular, spicy}
         Object[][] menu = {
@@ -211,16 +213,16 @@ public final class Database {
             {"Pepper Steak Pie", "Crisp, golden pastry with a savoury, peppery steak filling.", "Pies", 36, 14, 80, steakPie, 0, 0},
             {"Braai Chicken Roll", "Seasoned chicken, crunchy slaw and tangy house sauce in a soft roll.", "Rolls", 59, 24, 80, roll, 0, 0},
             {"Chilli Crunch Wrap", "Crispy chicken, fresh greens and a lively chilli dressing in a warm tortilla.", "Rolls", 62, 25, 80, wrap, 0, 1},
-            {"Vanilla Ice Cream · Small", "A small cup of smooth vanilla ice cream.", "Ice Cream", 22, 7, 100, iceCream, 0, 0},
-            {"Vanilla Ice Cream · Regular", "A regular cup of smooth vanilla ice cream.", "Ice Cream", 32, 10, 100, iceCream, 0, 0},
-            {"Vanilla Ice Cream · Large", "A large cup of smooth vanilla ice cream.", "Ice Cream", 42, 13, 100, iceCream, 0, 0},
-            {"Choc-O-Block Shake", "Thick chocolate shake, blended fresh.", "Drinks", 48, 17, 80, shake, 0, 0},
+            {"Vanilla Ice Cream · Small", "A classic vanilla soft-serve cone.", "Ice Cream", 22, 7, 100, coneSmall, 0, 0},
+            {"Vanilla Ice Cream · Regular", "Two scoops of smooth vanilla ice cream in a bowl.", "Ice Cream", 32, 10, 100, bowlRegular, 0, 0},
+            {"Vanilla Ice Cream · Large", "A large cup of vanilla ice cream with a sweet berry swirl.", "Ice Cream", 42, 13, 100, cupLarge, 0, 0},
+            {"Choc-O-Block Shake", "Thick chocolate shake with a chocolate-syrup drizzle, blended fresh.", "Drinks", 48, 17, 80, shake, 0, 0},
             {"House Lemonade", "Fresh, zesty lemonade: the perfect sidekick to the heat.", "Drinks", 32, 9, 80, lemonade, 0, 0},
             {"Guava Cooler", "A chilled, fruity guava drink.", "Drinks", 28, 8, 80, guava, 0, 0},
             {"Coke", "A chilled Coke.", "Drinks", 25, 12, 200, cola, 0, 0},
-            {"Sprite", "A chilled Sprite.", "Drinks", 25, 12, 200, can, 0, 0},
-            {"Pepsi", "A chilled Pepsi.", "Drinks", 25, 12, 200, colaPour, 0, 0},
-            {"Still Water", "A bottle of refreshing still water.", "Drinks", 20, 6, 200, water, 0, 0},
+            {"Sprite", "A chilled Sprite.", "Drinks", 25, 12, 200, lemonSoda, 0, 0},
+            {"Pepsi", "A chilled Pepsi.", "Drinks", 25, 12, 200, colaTop, 0, 0},
+            {"Still Water", "Ice-cold still water, poured fresh.", "Drinks", 20, 6, 200, water, 0, 0},
         };
         String sql = "INSERT INTO products (name, description, category, price, cost, stock, image, popular, spicy) VALUES (?,?,?,?,?,?,?,?,?)";
         try (PreparedStatement insert = connection.prepareStatement(sql)) {
