@@ -1,12 +1,12 @@
 /*
  * File:    Json.java
- * Author:  CloudStore group (JGA 2026)
+ * Author:  Kasi-Crunch group (JGA 2026)
  * Date:    2026-10-17
  * Purpose: A small JSON writer so the API can answer the browser without an
  *          external library. Supports maps, lists, strings, numbers,
  *          booleans and null.
  */
-package cloudstore;
+package kasicrunch;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;

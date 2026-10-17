@@ -1,11 +1,11 @@
 /*
  * File:    Http.java
- * Author:  CloudStore group (JGA 2026)
+ * Author:  Kasi-Crunch group (JGA 2026)
  * Date:    2026-10-17
  * Purpose: Helpers for reading requests (query strings, form bodies, cookies)
  *          and writing JSON responses with sensible security headers.
  */
-package cloudstore;
+package kasicrunch;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -75,9 +75,9 @@ public final class Http {
     }
 
     /** HttpOnly keeps the session token away from page scripts. */
-    public static void setSessionCookie(HttpExchange exchange, String token, int maxAgeSeconds) {
+    public static void setSessionCookie(HttpExchange exchange, String name, String token, int maxAgeSeconds) {
         exchange.getResponseHeaders().add("Set-Cookie",
-                "cs_session=" + token + "; Path=/; HttpOnly; SameSite=Lax; Max-Age=" + maxAgeSeconds);
+                name + "=" + token + "; Path=/; HttpOnly; SameSite=Lax; Max-Age=" + maxAgeSeconds);
     }
 
     public static void addSecurityHeaders(HttpExchange exchange) {

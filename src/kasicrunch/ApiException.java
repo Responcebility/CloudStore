@@ -1,11 +1,11 @@
 /*
  * File:    ApiException.java
- * Author:  CloudStore group (JGA 2026)
+ * Author:  Kasi-Crunch group (JGA 2026)
  * Date:    2026-10-17
  * Purpose: An error carrying an HTTP status and a polite message that is
  *          safe to show the user (for example a failed validation).
  */
-package cloudstore;
+package kasicrunch;
 
 public class ApiException extends RuntimeException {
 

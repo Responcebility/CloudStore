@@ -1,12 +1,12 @@
 /*
  * File:    ApiHandler.java
- * Author:  CloudStore group (JGA 2026)
+ * Author:  Kasi-Crunch group (JGA 2026)
  * Date:    2026-10-17
  * Purpose: Base class for every API endpoint. It routes the request and turns
  *          any problem into a clear JSON message, so the server never crashes
  *          and the user never sees a raw error.
  */
-package cloudstore;
+package kasicrunch;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;

@@ -1,4 +1,4 @@
-# CloudStore - build and run on Windows (PowerShell).
+# Kasi-Crunch - build and run on Windows (PowerShell).
 # Usage:  .\run.ps1
 $ErrorActionPreference = "Stop"
 Set-Location $PSScriptRoot
@@ -19,8 +19,8 @@ if (-not (Test-Path "config.properties")) {
 
 Write-Host "Compiling..."
 if (Test-Path out) { Remove-Item -Recurse -Force out }
-javac -encoding UTF-8 -d out -cp "lib/*" (Get-ChildItem src/cloudstore/*.java).FullName
+javac -encoding UTF-8 -d out -cp "lib/*" (Get-ChildItem src/kasicrunch/*.java).FullName
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-Write-Host "Starting CloudStore..."
-java -cp "out;lib/*" cloudstore.Main
+Write-Host "Starting Kasi-Crunch..."
+java -cp "out;lib/*" kasicrunch.Main

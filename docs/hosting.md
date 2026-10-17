@@ -1,8 +1,8 @@
-# Hosting CloudStore online
+# Hosting Kasi-Crunch online
 
 The JGA brief gives 10% for a website that is **live on a public URL** on
-presentation day. CloudStore needs a host that can run Java and a MySQL
-database, so GitHub Pages (which only serves static files) is not enough on its own.
+presentation day. Kasi-Crunch needs a host that can run Java and a MySQL
+database. GitHub Pages only serves static files, so it can't run the app on its own.
 
 ## What the host must provide
 
@@ -19,16 +19,16 @@ Instead of `config.properties`, set these on the host:
 
 | Variable | Example |
 |---|---|
-| `CLOUDSTORE_DB_HOST` | `your-mysql-host.example.com` |
-| `CLOUDSTORE_DB_PORT` | `3306` |
-| `CLOUDSTORE_DB_NAME` | `cloudstore` |
-| `CLOUDSTORE_DB_USER` | `cloudstore_app` |
-| `CLOUDSTORE_DB_PASSWORD` | *(secret)* |
-| `CLOUDSTORE_SERVER_PORT` | `8080` (or the port your host gives you) |
-| `CLOUDSTORE_ADMIN_EMAIL` | admin login created on first start |
-| `CLOUDSTORE_ADMIN_PASSWORD` | *(choose a strong one before the first start)* |
+| `KASICRUNCH_DB_HOST` | `your-mysql-host.example.com` |
+| `KASICRUNCH_DB_PORT` | `3306` |
+| `KASICRUNCH_DB_NAME` | `kasicrunch` |
+| `KASICRUNCH_DB_USER` | `kasicrunch_app` |
+| `KASICRUNCH_DB_PASSWORD` | *(secret)* |
+| `KASICRUNCH_SERVER_PORT` | `8080` (or the port your host gives you) |
+| `KASICRUNCH_ADMIN_EMAIL` | admin login created on first start |
+| `KASICRUNCH_ADMIN_PASSWORD` | *(choose a strong one before the first start)* |
 
-The database user needs permission to create the `cloudstore` database and its
+The database user needs permission to create the `kasicrunch` database and its
 tables the first time; after that, normal read/write access is enough.
 
 ## Option A: a Docker-based host (Railway, Render, Azure Container Apps, AWS App Runner)

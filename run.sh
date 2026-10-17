@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-# CloudStore - build and run on macOS / Linux / Git Bash.
+# Kasi-Crunch - build and run on macOS / Linux / Git Bash.
 # Usage:  ./run.sh
 set -e
 cd "$(dirname "$0")"
@@ -23,7 +23,7 @@ case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) SEP=";" ;; *) SEP=":" ;; esac
 
 echo "Compiling..."
 rm -rf out
-javac -encoding UTF-8 -d out -cp "lib/*" src/cloudstore/*.java
+javac -encoding UTF-8 -d out -cp "lib/*" src/kasicrunch/*.java
 
-echo "Starting CloudStore..."
-exec java -cp "out${SEP}lib/*" cloudstore.Main
+echo "Starting Kasi-Crunch..."
+exec java -cp "out${SEP}lib/*" kasicrunch.Main

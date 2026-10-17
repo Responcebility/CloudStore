@@ -1,10 +1,10 @@
 /*
  * File:    ContactHandler.java
- * Author:  CloudStore group (JGA 2026)
+ * Author:  Kasi-Crunch group (JGA 2026)
  * Date:    2026-10-17
  * Purpose: Saves messages from the Contact page so the team can reply.
  */
-package cloudstore;
+package kasicrunch;
 
 import com.sun.net.httpserver.HttpExchange;
 

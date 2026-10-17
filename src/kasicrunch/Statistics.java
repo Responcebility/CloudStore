@@ -1,11 +1,11 @@
 /*
  * File:    Statistics.java
- * Author:  CloudStore group (JGA 2026)
+ * Author:  Kasi-Crunch group (JGA 2026)
  * Date:    2026-10-17
  * Purpose: Elementary statistics used on the dashboard: mean, median,
  *          range and percentages, plus a daily-to-monthly conversion.
  */
-package cloudstore;
+package kasicrunch;
 
 import java.util.ArrayList;
 import java.util.Collections;

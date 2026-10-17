@@ -3,71 +3,32 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>My Account · CloudStore</title>
-  <meta name="description" content="Your CloudStore orders, plan and shop.">
+  <title>My Account · Kasi-Crunch</title>
+  <meta name="description" content="Your Kasi-Crunch orders and club.">
   <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body data-page="account">
   <main id="main" class="container">
-    <section class="page-hero glass reveal">
-      <span class="eyebrow" id="role-badge">👤 My account</span>
-      <h1 id="greeting">My account</h1>
-      <p class="lead" id="account-email"></p>
+    <section class="page-hero glass row space-between">
+      <div>
+        <h1 id="greeting" style="margin-bottom:4px">My account</h1>
+        <p class="muted" id="account-email" style="margin:0"></p>
+      </div>
+      <a class="btn btn-primary btn-lg" href="menu.html">Order again</a>
     </section>
 
-    <section class="section grid grid-2">
-      <div class="card glass">
-        <h2>My plan</h2>
-        <div id="subscriptions"><p class="muted">Loading…</p></div>
-      </div>
-      <div class="card glass">
-        <h2>Quick links</h2>
-        <div class="row">
-          <a class="btn" href="shop.html">🛍️ Shop</a>
-          <a class="btn" href="cart.html">🛒 Cart</a>
-          <a class="btn" href="revenue.html#plans">⭐ Plans</a>
-          <a class="btn" href="contact.html">✉️ Contact</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="shop-section" hidden>
-      <div class="section-head"><div><h2 id="shop-title">My shop</h2><p class="muted" id="shop-meta"></p></div></div>
-      <div class="grid grid-3" style="margin-bottom:20px">
-        <div class="stat glass"><div class="stat-label">Products</div><div class="stat-value" id="shop-products">0</div></div>
-        <div class="stat glass"><div class="stat-label">Total sales</div><div class="stat-value" id="shop-sales">R 0</div></div>
-        <div class="stat glass"><div class="stat-label">Your payout</div><div class="stat-value" id="shop-payout">R 0</div><div class="stat-note" id="shop-rate"></div></div>
-      </div>
-      <div class="grid" style="grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)" id="shop-grid">
-        <div class="card glass"><h3>My products</h3><div class="table-wrap"><table>
-          <thead><tr><th>Product</th><th class="num">Price</th><th class="num">Stock</th><th class="num">Sold</th><th class="num">Sales</th></tr></thead>
-          <tbody id="shop-table"></tbody></table></div></div>
-        <form class="card glass form-grid" id="product-form" novalidate>
-          <h3>Add a product</h3>
-          <div class="field"><label for="p-name">Name</label><input class="input" id="p-name" name="name" maxlength="100"><span class="field-error"></span></div>
-          <div class="field"><label for="p-description">Description</label><input class="input" id="p-description" name="description" maxlength="300"><span class="field-error"></span></div>
-          <div class="form-grid two">
-            <div class="field"><label for="p-category">Category</label><select class="input" id="p-category" name="category"></select></div>
-            <div class="field"><label for="p-emoji">Emoji</label><input class="input" id="p-emoji" name="emoji" maxlength="8" placeholder="🛍️"></div>
-            <div class="field"><label for="p-price">Price (R)</label><input class="input" id="p-price" name="price" type="number" min="1" max="50000" step="0.01"><span class="field-error"></span></div>
-            <div class="field"><label for="p-stock">Stock</label><input class="input" id="p-stock" name="stock" type="number" min="0" max="10000" step="1"><span class="field-error"></span></div>
-          </div>
-          <button class="btn btn-primary" type="submit">Add product</button>
-        </form>
-      </div>
-    </section>
+    <section class="section card glass" id="club"><p class="muted">Loading…</p></section>
 
     <section class="section">
-      <div class="section-head"><div><h2>My orders</h2><p class="muted">Your 50 most recent orders.</p></div></div>
+      <h2>My orders</h2>
       <div id="orders" class="stack"><div class="skeleton" style="min-height:120px"></div></div>
     </section>
   </main>
   <script src="js/app.js"></script>
-  <script src="js/product-form.js"></script>
   <script src="js/account.js"></script>
 </body>
 </html>

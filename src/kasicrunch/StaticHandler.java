@@ -1,11 +1,11 @@
 /*
  * File:    StaticHandler.java
- * Author:  CloudStore group (JGA 2026)
+ * Author:  Kasi-Crunch group (JGA 2026)
  * Date:    2026-10-17
  * Purpose: Serves the website files (HTML, CSS, JavaScript, images) from the
  *          public folder, refusing any path that tries to leave that folder.
  */
-package cloudstore;
+package kasicrunch;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;

@@ -1,12 +1,11 @@
 /*
  * File:    InsightsHandler.java
- * Author:  CloudStore group (JGA 2026)
+ * Author:  Kasi-Crunch group (JGA 2026)
  * Date:    2026-10-17
  * Purpose: Public figures for the website: the pricing parameters the cart
- *          uses, and community impact numbers built only from totals (no
- *          personal data).
+ *          uses, and simple numbers built only from totals (no personal data).
  */
-package cloudstore;
+package kasicrunch;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -25,7 +24,6 @@ public final class InsightsHandler extends ApiHandler {
             case "GET /api/pricing" -> Http.json(exchange, 200, Json.map(
                     "deliveryFee", Pricing.DELIVERY_FEE,
                     "freeDeliveryThreshold", Pricing.FREE_DELIVERY_THRESHOLD,
-                    "defaultCommissionRate", Pricing.DEFAULT_COMMISSION_RATE,
                     "maxQuantityPerItem", Pricing.MAX_QUANTITY_PER_ITEM));
             case "GET /api/insights" -> insights(exchange);
             default -> throw noRoute();
@@ -34,10 +32,9 @@ public final class InsightsHandler extends ApiHandler {
 
     private void insights(HttpExchange exchange) throws Exception {
         try (Connection connection = Database.connect()) {
-            long products = Database.count(connection, "SELECT COUNT(*) FROM products");
-            long vendors = Database.count(connection, "SELECT COUNT(*) FROM vendors");
-            long communities = Database.count(connection, "SELECT COUNT(DISTINCT location) FROM vendors");
+            long menuItems = Database.count(connection, "SELECT COUNT(*) FROM products");
             long delivered = Database.count(connection, "SELECT COUNT(*) FROM orders WHERE status = 'Delivered'");
+            long customers = Database.count(connection, "SELECT COUNT(DISTINCT user_id) FROM orders");
 
             List<Map<String, Object>> categories = new ArrayList<>();
             double totalSales = 0;
@@ -56,8 +53,8 @@ public final class InsightsHandler extends ApiHandler {
                 category.put("share", Statistics.percentage((Double) category.get("sales"), totalSales));
                 category.remove("sales");
             }
-            Http.json(exchange, 200, Json.map("products", products, "vendors", vendors, "communities", communities,
-                    "ordersDelivered", delivered, "categoryShare", categories));
+            Http.json(exchange, 200, Json.map("menuItems", menuItems, "ordersDelivered", delivered,
+                    "customers", customers, "categoryShare", categories));
         }
     }
 }

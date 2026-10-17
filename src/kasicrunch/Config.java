@@ -1,12 +1,12 @@
 /*
  * File:    Config.java
- * Author:  CloudStore group (JGA 2026)
+ * Author:  Kasi-Crunch group (JGA 2026)
  * Date:    2026-10-17
  * Purpose: Loads runtime settings (database connection, server port) from
  *          config.properties, letting environment variables override them so
  *          the same build can run locally or on a cloud host.
  */
-package cloudstore;
+package kasicrunch;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,11 +36,11 @@ public final class Config {
     }
 
     /**
-     * Looks up a setting. An environment variable such as CLOUDSTORE_DB_HOST
+     * Looks up a setting. An environment variable such as KASICRUNCH_DB_HOST
      * wins over the db.host entry in the file, which wins over the default.
      */
     public String get(String key, String defaultValue) {
-        String envName = "CLOUDSTORE_" + key.toUpperCase().replace('.', '_');
+        String envName = "KASICRUNCH_" + key.toUpperCase().replace('.', '_');
         String fromEnv = System.getenv(envName);
         if (fromEnv != null && !fromEnv.isBlank()) {
             return fromEnv;
@@ -58,10 +58,10 @@ public final class Config {
 
     public String dbHost() { return get("db.host", "localhost"); }
     public int dbPort() { return getInt("db.port", 3306); }
-    public String dbName() { return get("db.name", "cloudstore"); }
+    public String dbName() { return get("db.name", "kasicrunch"); }
     public String dbUser() { return get("db.user", "root"); }
     public String dbPassword() { return get("db.password", ""); }
     public int serverPort() { return getInt("server.port", 8080); }
-    public String adminEmail() { return get("admin.email", "admin@cloudstore.local"); }
+    public String adminEmail() { return get("admin.email", "admin@kasicrunch.local"); }
     public String adminPassword() { return get("admin.password", "Admin@2026"); }
 }

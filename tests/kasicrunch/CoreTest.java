@@ -1,12 +1,12 @@
 /*
  * File:    CoreTest.java
- * Author:  CloudStore group (JGA 2026)
+ * Author:  Kasi-Crunch group (JGA 2026)
  * Date:    2026-10-17
  * Purpose: Checks the money formulas, statistics, input validation and cart
  *          parsing, including deliberately bad input (letters, negatives,
  *          huge numbers). Run with test.ps1 or test.sh; no database needed.
  */
-package cloudstore;
+package kasicrunch;
 
 import java.util.List;
 import java.util.Map;
@@ -17,14 +17,17 @@ public final class CoreTest {
     private static int failed = 0;
 
     public static void main(String[] args) {
-        // Pricing: delivery is R35, free strictly above R500 or with Plus.
-        check("delivery on R499.99", Pricing.deliveryFee(499.99, false) == 35.0);
-        check("delivery on exactly R500", Pricing.deliveryFee(500.00, false) == 35.0);
-        check("free delivery on R500.01", Pricing.deliveryFee(500.01, false) == 0.0);
-        check("free delivery with Plus", Pricing.deliveryFee(50, true) == 0.0);
-        check("order total adds delivery", Pricing.orderTotal(180, 35) == 215.0);
-        check("10% commission on R180", Pricing.commission(180, 0.10) == 18.0);
-        check("vendor payout on R180", Pricing.vendorPayout(180, 0.10) == 162.0);
+        // Pricing: delivery is R25, free strictly above R250 or for club members.
+        check("delivery on R249.99", Pricing.deliveryFee(249.99, false) == 25.0);
+        check("delivery on exactly R250", Pricing.deliveryFee(250.00, false) == 25.0);
+        check("free delivery on R250.01", Pricing.deliveryFee(250.01, false) == 0.0);
+        check("free delivery for club members", Pricing.deliveryFee(40, true) == 0.0);
+        check("10% club discount on R120", Pricing.discount(120, 0.10) == 12.0);
+        check("no discount for non-members", Pricing.discount(120, 0.0) == 0.0);
+        check("order total: R89.90 + R25 delivery", Pricing.orderTotal(89.90, 0, 25) == 114.9);
+        check("order total with discount", Pricing.orderTotal(120, 12, 0) == 108.0);
+        check("gross profit", Pricing.grossProfit(100, 42.5) == 57.5);
+        check("gross margin %", Pricing.marginPercent(200, 90) == 55.0);
         check("rounds to cents", Pricing.round2(19.999) == 20.0 && Pricing.round2(3.141) == 3.14);
 
         // Statistics.

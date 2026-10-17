@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Menu · Kasi-Crunch</title>
+  <meta name="description" content="The Kasi-Crunch menu: chicken, burgers, kotas, combos, sides, drinks and desserts.">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="menu">
+  <main id="main" class="container">
+    <section class="page-hero glass">
+      <span class="eyebrow">🍗 Products &amp; services</span>
+      <h1>Our <span class="accent-text">menu</span></h1>
+      <p class="lead">Everything is made fresh to order. Delivery is R25, or free when your order is over R250.</p>
+    </section>
+
+    <div class="toolbar glass section" style="margin-top:22px" role="search">
+      <label class="visually-hidden" for="search">Search the menu</label>
+      <input id="search" class="input search-input" type="search" maxlength="60" placeholder="Search e.g. wings, kota, burger…">
+      <div class="chips" id="categories" aria-label="Filter by category"></div>
+    </div>
+
+    <div id="menu" aria-live="polite"><div class="skeleton"></div></div>
+  </main>
+  <script src="js/app.js"></script>
+  <script src="js/menu.js"></script>
+</body>
+</html>

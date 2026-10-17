@@ -1,11 +1,11 @@
 /*
  * File:    Main.java
- * Author:  CloudStore group (JGA 2026)
+ * Author:  Kasi-Crunch group (JGA 2026)
  * Date:    2026-10-17
- * Purpose: Starts CloudStore: connects to MySQL, prepares the database, then
+ * Purpose: Starts Kasi-Crunch: connects to MySQL, prepares the database, then
  *          runs the web server that serves both the website and the API.
  */
-package cloudstore;
+package kasicrunch;
 
 import com.sun.net.httpserver.HttpServer;
 
@@ -33,9 +33,7 @@ public final class Main {
 
         HttpServer server = HttpServer.create(new InetSocketAddress(config.serverPort()), 0);
         server.createContext("/api/auth", new AuthHandler());
-        ProductHandler products = new ProductHandler();
-        server.createContext("/api/products", products);
-        server.createContext("/api/vendors", products);
+        server.createContext("/api/products", new ProductHandler());
         server.createContext("/api/orders", new OrderHandler());
         PlanHandler plans = new PlanHandler();
         server.createContext("/api/plans", plans);
@@ -50,6 +48,6 @@ public final class Main {
         server.setExecutor(Executors.newFixedThreadPool(16));
         server.start();
 
-        System.out.println("CloudStore is running at http://localhost:" + config.serverPort());
+        System.out.println("Kasi-Crunch is running at http://localhost:" + config.serverPort());
     }
 }

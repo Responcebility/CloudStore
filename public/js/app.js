@@ -1,25 +1,25 @@
 /*
  * File:    app.js
- * Author:  CloudStore group (JGA 2026)
+ * Author:  Kasi-Crunch group (JGA 2026)
  * Date:    2026-10-17
  * Purpose: Shared code for every page: header and footer, login state, the
- *          cart (kept in the browser), API calls, toasts and the CloudBot
- *          chat assistant.
+ *          cart (kept in the browser), API calls, toasts and the Crunchy
+ *          ordering assistant.
  */
 
-const CS = (() => {
+const KC = (() => {
   const NAV = [
     { href: "index.html", label: "Home", page: "home" },
-    { href: "shop.html", label: "Shop", page: "shop" },
+    { href: "menu.html", label: "Menu", page: "menu" },
     { href: "about.html", label: "About", page: "about" },
     { href: "persona.html", label: "Customer Persona", page: "persona" },
     { href: "revenue.html", label: "Revenue Model", page: "revenue" },
     { href: "research.html", label: "Research", page: "research" },
     { href: "contact.html", label: "Contact", page: "contact" },
   ];
-  const CART_KEY = "cs_cart";
+  const CART_KEY = "kc_cart";
   let currentUser = null;
-  let pricing = { deliveryFee: 35, freeDeliveryThreshold: 500, maxQuantityPerItem: 20 };
+  let pricing = { deliveryFee: 25, freeDeliveryThreshold: 250, maxQuantityPerItem: 20 };
 
   // ---------- Helpers ----------
   function escapeHtml(value) {
@@ -27,7 +27,7 @@ const CS = (() => {
   }
 
   function money(amount) {
-    return "R " + Number(amount || 0).toLocaleString("en-ZA", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return "R" + Number(amount || 0).toLocaleString("en-ZA", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
 
   /** Calls the Java API. Sends form-encoded data and returns the JSON reply, or throws with a friendly message. */
@@ -41,14 +41,10 @@ const CS = (() => {
     try {
       response = await fetch(path, options);
     } catch {
-      throw new Error("We could not reach CloudStore. Please check your connection and try again.");
+      throw new Error("We couldn't reach Kasi-Crunch. Please check your connection and try again.");
     }
     const json = await response.json().catch(() => ({}));
-    if (!response.ok) {
-      const error = new Error(json.error || "Something went wrong. Please try again.");
-      error.status = response.status;
-      throw error;
-    }
+    if (!response.ok) throw new Error(json.error || "Something went wrong. Please try again.");
     return json;
   }
 
@@ -62,13 +58,13 @@ const CS = (() => {
       document.body.appendChild(area);
     }
     const item = document.createElement("div");
-    item.className = `toast glass glass-strong ${type}`;
+    item.className = `toast glass ${type}`;
     item.textContent = message;
     area.appendChild(item);
-    setTimeout(() => item.remove(), 4200);
+    setTimeout(() => item.remove(), 4000);
   }
 
-  // ---------- Cart (stored in the browser; prices are re-checked by the server at checkout) ----------
+  // ---------- Cart (kept in the browser; the server re-checks every price at checkout) ----------
   function readCart() {
     try {
       return JSON.parse(localStorage.getItem(CART_KEY)) || {};
@@ -86,44 +82,41 @@ const CS = (() => {
     updateCartCount();
   }
 
-  function cartItems() {
-    return Object.values(readCart());
+  const cartItems = () => Object.values(readCart());
+
+  function limitFor(item) {
+    return Math.min(pricing.maxQuantityPerItem, item.stock ?? pricing.maxQuantityPerItem);
   }
 
-  function addToCart(product, quantity = 1) {
+  function addToCart(product) {
     const cart = readCart();
-    const existing = cart[product.id];
-    const next = (existing ? existing.qty : 0) + quantity;
-    const limit = Math.min(pricing.maxQuantityPerItem, product.stock ?? pricing.maxQuantityPerItem);
-    if (next > limit) {
-      toast(`You can add at most ${limit} of ${product.name}.`, "error");
+    const next = (cart[product.id]?.qty || 0) + 1;
+    if (next > limitFor(product)) {
+      toast(`You can add at most ${limitFor(product)} × ${product.name}.`, "error");
       return;
     }
-    cart[product.id] = {
-      id: product.id, name: product.name, price: product.price, emoji: product.emoji,
-      vendorName: product.vendorName, stock: product.stock, qty: next,
-    };
+    cart[product.id] = { id: product.id, name: product.name, price: product.price, emoji: product.emoji, stock: product.stock, qty: next };
     writeCart(cart);
-    toast(`${product.emoji} ${product.name} added to your cart.`);
+    toast(`${product.emoji} ${product.name} added to your order.`);
   }
 
   function setQuantity(id, qty) {
     const cart = readCart();
     if (!cart[id]) return;
     if (qty <= 0) delete cart[id];
-    else cart[id].qty = Math.min(qty, pricing.maxQuantityPerItem, cart[id].stock ?? pricing.maxQuantityPerItem);
+    else cart[id].qty = Math.min(qty, limitFor(cart[id]));
     writeCart(cart);
   }
 
-  function clearCart() {
-    writeCart({});
-  }
+  const clearCart = () => writeCart({});
 
-  function cartTotals(hasPlus = false) {
-    const subtotal = Math.round(cartItems().reduce((sum, item) => sum + item.price * item.qty, 0) * 100) / 100;
-    // Same rule as Pricing.java: free above the threshold or for Plus members.
-    const delivery = subtotal === 0 || hasPlus || subtotal > pricing.freeDeliveryThreshold ? 0 : pricing.deliveryFee;
-    return { subtotal, delivery, total: Math.round((subtotal + delivery) * 100) / 100 };
+  /** Same rules as Pricing.java: club discount, then free delivery for clubs or orders over the threshold. */
+  function cartTotals(club) {
+    const round = (n) => Math.round(n * 100) / 100;
+    const subtotal = round(cartItems().reduce((sum, item) => sum + item.price * item.qty, 0));
+    const discount = club ? round(subtotal * club.discountRate) : 0;
+    const delivery = subtotal === 0 || (club && club.freeDelivery) || subtotal > pricing.freeDeliveryThreshold ? 0 : pricing.deliveryFee;
+    return { subtotal, discount, delivery, total: round(subtotal - discount + delivery) };
   }
 
   function updateCartCount() {
@@ -135,20 +128,21 @@ const CS = (() => {
   }
 
   // ---------- Layout ----------
+  const brand = `<span class="brand-mark" aria-hidden="true">🍗</span><span class="brand-name">Kasi-<span>Crunch</span></span>`;
+
   function renderShell() {
     const page = document.body.dataset.page;
     document.body.insertAdjacentHTML("afterbegin", `
-      <div class="blobs" aria-hidden="true"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div>
-      <a class="visually-hidden" href="#main">Skip to content</a>
+      <a class="visually-hidden skip-link" href="#main">Skip to content</a>
       <header class="site-header container">
         <nav class="nav glass" aria-label="Main">
-          <a class="brand" href="index.html"><span class="brand-mark">☁</span>CloudStore</a>
+          <a class="brand" href="index.html" aria-label="Kasi-Crunch home">${brand}</a>
           <button class="btn icon-btn menu-toggle" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
           <ul class="nav-links">
-            ${NAV.map((item) => `<li><a href="${item.href}" class="${item.page === page ? "active" : ""}">${item.label}</a></li>`).join("")}
+            ${NAV.map((item) => `<li><a href="${item.href}" ${item.page === page ? 'class="active" aria-current="page"' : ""}>${item.label}</a></li>`).join("")}
           </ul>
           <div class="nav-actions">
-            <a class="btn icon-btn cart-link" href="cart.html" aria-label="Cart">🛒<span class="cart-count"></span></a>
+            <a class="btn icon-btn cart-link" href="cart.html" aria-label="Your order">🛒<span class="cart-count"></span></a>
             <span class="auth-slot"><a class="btn btn-primary btn-sm" href="login.html">Log in</a></span>
           </div>
         </nav>
@@ -158,25 +152,17 @@ const CS = (() => {
       <footer class="site-footer container">
         <div class="footer-inner glass">
           <div>
-            <a class="brand" href="index.html"><span class="brand-mark">☁</span>CloudStore</a>
-            <p class="muted" style="margin-top:12px">An online marketplace that helps township and campus vendors sell to their community —
-              digital entrepreneurship for sustainable community development.</p>
+            <a class="brand" href="index.html">${brand}</a>
+            <p class="faint" style="margin:8px 0 0">Crunch outside, juicy inside.</p>
           </div>
-          <div>
-            <h4>Explore</h4>
-            <ul>${NAV.slice(1, 5).map((item) => `<li><a href="${item.href}">${item.label}</a></li>`).join("")}</ul>
-          </div>
-          <div>
-            <h4>More</h4>
-            <ul>
-              <li><a href="research.html">Market research &amp; sources</a></li>
-              <li><a href="contact.html">Contact us</a></li>
-              <li><a href="cart.html">Your cart</a></li>
-              <li><a href="account.html">My account</a></li>
-            </ul>
-          </div>
+          <nav class="footer-links" aria-label="Footer">
+            <a href="menu.html">Menu</a><a href="revenue.html#clubs">Clubs</a><a href="cart.html">Your order</a>
+            <a href="account.html">My account</a><a href="contact.html">Contact</a>
+          </nav>
         </div>
-        <p class="footer-bottom">© 2026 CloudStore · JGA 2026 prototype (Faculty of ICT) · Demo data only — no real payments are processed.</p>
+        <p class="footer-note">© 2026 Kasi-Crunch · JGA 2026 prototype, Faculty of ICT · Demo only, no real payments.
+          Background photo by <a href="https://unsplash.com/@tigerrulezzz" target="_blank" rel="noopener">Brian Chan</a> on
+          <a href="https://unsplash.com/photos/NbXjZomyNEM" target="_blank" rel="noopener">Unsplash</a>.</p>
       </footer>`);
 
     const toggle = document.querySelector(".menu-toggle");
@@ -184,70 +170,50 @@ const CS = (() => {
     toggle.addEventListener("click", () => {
       const open = links.classList.toggle("open");
       toggle.setAttribute("aria-expanded", String(open));
+      toggle.textContent = open ? "✕" : "☰";
     });
     updateCartCount();
   }
 
   function renderAuth() {
     const slot = document.querySelector(".auth-slot");
-    if (!slot) return;
     if (!currentUser) {
       slot.innerHTML = `<a class="btn btn-primary btn-sm" href="login.html">Log in</a>`;
       return;
     }
     const firstName = escapeHtml(currentUser.fullName.split(" ")[0]);
     slot.innerHTML = `
-      ${currentUser.role === "admin" ? `<a class="btn btn-sm" href="dashboard.html">📊 Dashboard</a>` : ""}
-      <a class="btn btn-sm" href="account.html">👤 ${firstName}</a>
+      <a class="btn btn-sm" href="${currentUser.role === "admin" ? "dashboard.html" : "account.html"}">${currentUser.role === "admin" ? "📊 Dashboard" : "👤 " + firstName}</a>
       <button class="btn btn-sm" type="button" data-logout>Log out</button>`;
     slot.querySelector("[data-logout]").addEventListener("click", async () => {
       await api("/api/auth/logout", { method: "POST", data: {} }).catch(() => {});
-      currentUser = null;
-      toast("You have been logged out.");
+      toast("You've been logged out. See you soon!");
       setTimeout(() => (window.location.href = "index.html"), 500);
     });
   }
 
-  function revealOnScroll() {
-    const items = document.querySelectorAll(".reveal");
-    if (!("IntersectionObserver" in window)) {
-      items.forEach((el) => el.classList.add("visible"));
-      return;
-    }
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12 });
-    items.forEach((el) => observer.observe(el));
-  }
-
-  // ---------- Product card ----------
-  function productCard(product) {
-    const lowStock = product.stock > 0 && product.stock <= 5;
+  // ---------- Menu item card ----------
+  function itemCard(product) {
+    const soldOut = product.stock <= 0;
     return `
-      <article class="product glass reveal">
-        <div class="product-art" aria-hidden="true">${escapeHtml(product.emoji)}
-          ${product.featured ? `<span class="badge badge-featured">★ Featured vendor</span>` : ""}
+      <article class="item glass">
+        <div class="item-art" aria-hidden="true">${escapeHtml(product.emoji)}
+          <div class="item-tags">
+            ${product.popular ? `<span class="tag tag-orange">🔥 Popular</span>` : ""}
+            ${product.spicy ? `<span class="tag tag-hot">🌶️ Spicy</span>` : ""}
+          </div>
         </div>
-        <span class="badge" style="align-self:flex-start;margin-bottom:8px">${escapeHtml(product.category)}</span>
         <h3>${escapeHtml(product.name)}</h3>
-        <div class="vendor">by ${escapeHtml(product.vendorName)} · ${escapeHtml(product.vendorLocation)}</div>
         <p class="desc">${escapeHtml(product.description)}</p>
-        ${lowStock ? `<span class="badge badge-amber" style="align-self:flex-start">Only ${product.stock} left</span>` : ""}
-        <div class="product-foot">
+        <div class="item-foot">
           <span class="price">${money(product.price)}</span>
-          ${product.stock > 0
-            ? `<button class="btn btn-primary btn-sm" type="button" data-add="${product.id}">Add to cart</button>`
-            : `<span class="badge badge-red">Sold out</span>`}
+          ${soldOut ? `<span class="tag tag-soft">Sold out today</span>`
+            : `<button class="btn btn-primary btn-sm" type="button" data-add="${product.id}" aria-label="Add ${escapeHtml(product.name)} to order">+ Add</button>`}
         </div>
       </article>`;
   }
 
-  /** Wires "Add to cart" buttons inside a container to a product list (or a function returning the current list). */
+  /** Wires "+ Add" buttons inside a container to a product list (or a function returning it). */
   function bindAddButtons(container, products) {
     container.addEventListener("click", (event) => {
       const button = event.target.closest("[data-add]");
@@ -258,24 +224,23 @@ const CS = (() => {
     });
   }
 
-  // ---------- CloudBot assistant ----------
+  // ---------- Crunchy, the ordering assistant ----------
   function renderAssistant() {
     document.body.insertAdjacentHTML("beforeend", `
-      <button class="btn btn-primary chat-fab" type="button" aria-label="Open CloudBot assistant" aria-expanded="false">💬</button>
-      <section class="chat-panel glass glass-strong" hidden aria-label="CloudBot assistant">
+      <button class="btn btn-primary chat-fab" type="button" aria-label="Chat to Crunchy, our ordering assistant" aria-expanded="false">💬</button>
+      <section class="chat-panel glass" hidden aria-label="Crunchy assistant">
         <div class="chat-head">
-          <div class="avatar" aria-hidden="true">🤖</div>
-          <div><strong>CloudBot</strong><small>Shopping assistant · rule-based</small></div>
-          <button class="btn icon-btn btn-sm" type="button" data-close style="margin-left:auto;width:34px;height:34px" aria-label="Close assistant">✕</button>
+          <div class="avatar" aria-hidden="true">🐔</div>
+          <div><strong>Crunchy</strong><small>Ordering assistant</small></div>
+          <button class="btn icon-btn btn-sm" type="button" data-close style="margin-left:auto;width:38px" aria-label="Close assistant">✕</button>
         </div>
         <div class="chat-log" aria-live="polite"></div>
         <div class="chat-suggestions">
-          ${["Delivery fees?", "Show me crafts", "Track my order", "How do I sell?"]
-            .map((s) => `<button class="chip" type="button" data-suggest>${s}</button>`).join("")}
+          ${["Something spicy", "Delivery fee?", "Student deal", "Track my order"].map((s) => `<button class="chip" type="button" data-suggest>${s}</button>`).join("")}
         </div>
         <form class="chat-form">
-          <label class="visually-hidden" for="chat-input">Ask CloudBot</label>
-          <input id="chat-input" class="input" maxlength="300" placeholder="Ask about products, delivery…" autocomplete="off">
+          <label class="visually-hidden" for="chat-input">Ask Crunchy</label>
+          <input id="chat-input" class="input" maxlength="300" placeholder="Ask about the menu…" autocomplete="off">
           <button class="btn btn-primary" type="submit">Send</button>
         </form>
       </section>`);
@@ -283,7 +248,6 @@ const CS = (() => {
     const fab = document.querySelector(".chat-fab");
     const panel = document.querySelector(".chat-panel");
     const log = panel.querySelector(".chat-log");
-    const form = panel.querySelector(".chat-form");
     const input = panel.querySelector("#chat-input");
     let greeted = false;
 
@@ -294,12 +258,11 @@ const CS = (() => {
       products.forEach((product) => {
         const row = document.createElement("div");
         row.className = "msg-product";
-        row.innerHTML = `<span class="emoji">${escapeHtml(product.emoji)}</span>
-          <div><strong>${escapeHtml(product.name)}</strong><br>${money(product.price)} · ${escapeHtml(product.vendorName)}</div>`;
+        row.innerHTML = `<span class="emoji">${escapeHtml(product.emoji)}</span><div><strong>${escapeHtml(product.name)}</strong><br>${money(product.price)}</div>`;
         const add = document.createElement("button");
         add.className = "btn btn-sm";
         add.type = "button";
-        add.textContent = "Add";
+        add.textContent = "+ Add";
         add.disabled = product.stock <= 0;
         add.addEventListener("click", () => addToCart(product));
         row.appendChild(add);
@@ -313,13 +276,11 @@ const CS = (() => {
       panel.hidden = !open;
       fab.setAttribute("aria-expanded", String(open));
       fab.textContent = open ? "✕" : "💬";
-      if (open) {
-        if (!greeted) {
-          addMessage("Hi! I'm CloudBot. Ask me about products, delivery, plans or your latest order.", "bot");
-          greeted = true;
-        }
-        input.focus();
+      if (open && !greeted) {
+        addMessage("Sharp sharp! I'm Crunchy 🐔 Ask me about the menu, delivery, the clubs or your latest order.", "bot");
+        greeted = true;
       }
+      if (open) input.focus();
     }
 
     async function ask(question) {
@@ -337,7 +298,7 @@ const CS = (() => {
 
     fab.addEventListener("click", () => setOpen(panel.hidden));
     panel.querySelector("[data-close]").addEventListener("click", () => setOpen(false));
-    form.addEventListener("submit", (event) => {
+    panel.querySelector(".chat-form").addEventListener("submit", (event) => {
       event.preventDefault();
       ask(input.value);
     });
@@ -348,7 +309,6 @@ const CS = (() => {
   const ready = (async () => {
     renderShell();
     renderAssistant();
-    revealOnScroll();
     const [me, prices] = await Promise.allSettled([api("/api/auth/me"), api("/api/pricing")]);
     if (me.status === "fulfilled") currentUser = me.value.user;
     if (prices.status === "fulfilled") pricing = prices.value;
@@ -357,7 +317,7 @@ const CS = (() => {
   })();
 
   return {
-    api, money, escapeHtml, toast, ready, productCard, bindAddButtons, revealOnScroll,
+    api, money, escapeHtml, toast, ready, itemCard, bindAddButtons,
     cartItems, addToCart, setQuantity, clearCart, cartTotals,
     get user() { return currentUser; },
     get pricing() { return pricing; },

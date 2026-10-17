@@ -1,11 +1,11 @@
 /*
  * File:    PasswordHasher.java
- * Author:  CloudStore group (JGA 2026)
+ * Author:  Kasi-Crunch group (JGA 2026)
  * Date:    2026-10-17
  * Purpose: Hashes passwords with PBKDF2 (salted, many iterations) so no
  *          password is ever stored in plain text, as the brief requires.
  */
-package cloudstore;
+package kasicrunch;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;

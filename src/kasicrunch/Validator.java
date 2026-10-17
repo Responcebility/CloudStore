@@ -1,12 +1,12 @@
 /*
  * File:    Validator.java
- * Author:  CloudStore group (JGA 2026)
+ * Author:  Kasi-Crunch group (JGA 2026)
  * Date:    2026-10-17
  * Purpose: Checks every value the user sends before it is used. Each check
  *          either returns the cleaned value or throws a polite message such
  *          as "Please enter a quantity between 1 and 20." instead of "ERROR".
  */
-package cloudstore;
+package kasicrunch;
 
 import java.util.Map;
 import java.util.regex.Pattern;

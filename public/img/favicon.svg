@@ -1,11 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <defs>
     <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#22d3ee"/>
-      <stop offset="0.55" stop-color="#a78bfa"/>
-      <stop offset="1" stop-color="#f472b6"/>
+      <stop offset="0" stop-color="#dc2626"/>
+      <stop offset="1" stop-color="#f97316"/>
     </linearGradient>
   </defs>
   <rect width="64" height="64" rx="16" fill="url(#g)"/>
-  <path d="M20 42h25a9 9 0 0 0 1-17.9A12 12 0 0 0 23.4 27 7.5 7.5 0 0 0 20 42z" fill="#0b1026"/>
+  <!-- A simple drumstick -->
+  <circle cx="27" cy="27" r="13" fill="#fff7ed"/>
+  <path d="M35 35 L46 46" stroke="#fff7ed" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="48" cy="44" r="4" fill="#fff7ed"/>
+  <circle cx="44" cy="48" r="4" fill="#fff7ed"/>
 </svg>

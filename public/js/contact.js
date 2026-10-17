@@ -1,6 +1,6 @@
 /*
  * File:    contact.js
- * Author:  CloudStore group (JGA 2026)
+ * Author:  Kasi-Crunch group (JGA 2026)
  * Date:    2026-10-17
  * Purpose: Contact form: checks each field in the browser, then sends it.
  *          The server checks everything again before saving.
@@ -9,19 +9,7 @@
 (() => {
   const form = document.getElementById("contact-form");
   const result = document.getElementById("contact-result");
-  const message = document.getElementById("message");
   const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-
-  // Stack the two columns on small screens.
-  const layout = document.getElementById("contact-layout");
-  const media = window.matchMedia("(max-width: 900px)");
-  const applyLayout = () => (layout.style.gridTemplateColumns = media.matches ? "1fr" : "minmax(0,1.3fr) minmax(0,1fr)");
-  media.addEventListener("change", applyLayout);
-  applyLayout();
-
-  message.addEventListener("input", () => {
-    document.getElementById("message-count").textContent = message.value.length;
-  });
 
   function validate() {
     const checks = [
@@ -46,12 +34,11 @@
     const button = form.querySelector("[type=submit]");
     button.disabled = true;
     try {
-      const reply = await CS.api("/api/contact", { method: "POST", data: Object.fromEntries(new FormData(form)) });
-      result.innerHTML = `<div class="alert alert-success">${CS.escapeHtml(reply.message)}</div>`;
+      const reply = await KC.api("/api/contact", { method: "POST", data: Object.fromEntries(new FormData(form)) });
+      result.innerHTML = `<div class="alert alert-success">${KC.escapeHtml(reply.message)}</div>`;
       form.reset();
-      document.getElementById("message-count").textContent = "0";
     } catch (error) {
-      result.innerHTML = `<div class="alert alert-error">${CS.escapeHtml(error.message)}</div>`;
+      result.innerHTML = `<div class="alert alert-error">${KC.escapeHtml(error.message)}</div>`;
     } finally {
       button.disabled = false;
     }

@@ -1,10 +1,10 @@
 /*
  * File:    AuthHandler.java
- * Author:  CloudStore group (JGA 2026)
+ * Author:  Kasi-Crunch group (JGA 2026)
  * Date:    2026-10-17
  * Purpose: Register, log in, log out and "who am I" endpoints under /api/auth.
  */
-package cloudstore;
+package kasicrunch;
 
 import com.sun.net.httpserver.HttpExchange;
 
@@ -86,7 +86,8 @@ public final class AuthHandler extends ApiHandler {
         }
         try (Connection connection = Database.connect()) {
             Map<String, Object> json = user.toJson();
-            json.put("hasPlus", Auth.hasPlus(connection, user.id()));
+            Auth.Club club = Auth.activeClub(connection, user.id());
+            json.put("club", club == null ? null : club.toJson());
             Http.json(exchange, 200, Json.map("user", json));
         }
     }
